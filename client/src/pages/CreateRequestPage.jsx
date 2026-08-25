@@ -132,15 +132,15 @@ export default function CreateRequestPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 pb-8">
+    <div className="max-w-4xl mx-auto space-y-4 pb-6 font-sans">
       
-      <div className="pb-4 border-b border-slate-200">
-        <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Create Request</h1>
-        <p className="text-xs text-slate-500 mt-1">Select a business workflow type to initiate department review</p>
+      <div className="pb-3 border-b border-slate-300">
+        <h1 className="text-xl font-extrabold text-slate-950 tracking-tight">Create Request</h1>
+        <p className="text-xs text-slate-500 mt-0.5">Select a business workflow type to initiate department review</p>
       </div>
 
-      {/* Workflow Type Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      {/* Workflow Category Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
         {requestTypes.map(t => {
           const Icon = WORKFLOW_ICONS[t.code] || Key;
           const isSelected = selectedTypeId === t.id;
@@ -149,28 +149,27 @@ export default function CreateRequestPage() {
             <div
               key={t.id}
               onClick={() => selectType(t)}
-              className={`p-4 rounded-xl border cursor-pointer transition flex flex-col justify-between ${
+              className={`p-3.5 rounded-md border cursor-pointer transition flex flex-col justify-between ${
                 isSelected
-                  ? 'border-indigo-600 bg-indigo-50/50 shadow-xs ring-2 ring-indigo-500/20'
-                  : 'border-slate-200 bg-white hover:border-indigo-300 hover:bg-slate-50/60'
+                  ? 'border-slate-950 bg-slate-900 text-white shadow-2xs'
+                  : 'border-slate-300 bg-white hover:bg-slate-50'
               }`}
             >
               <div>
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center mb-3 ${
-                  isSelected ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600'
+                <div className={`w-7 h-7 rounded-xs flex items-center justify-center mb-2 ${
+                  isSelected ? 'bg-teal-700 text-white' : 'bg-slate-100 text-slate-700'
                 }`}>
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-3.5 h-3.5" />
                 </div>
-                <h2 className="text-xs font-bold text-slate-900">{t.name}</h2>
-                <p className="text-[10px] text-slate-500 mt-1 line-clamp-2">{t.description}</p>
+                <h2 className={`text-xs font-bold ${isSelected ? 'text-white' : 'text-slate-900'}`}>{t.name}</h2>
+                <p className={`text-[10px] mt-1 line-clamp-2 ${isSelected ? 'text-slate-300' : 'text-slate-500'}`}>{t.description}</p>
               </div>
 
-              <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-400 font-medium">
-                <span className="flex items-center gap-1">
-                  <Clock className="w-3 h-3 text-amber-500" />
-                  Target SLA: {t.target_sla_hours}h
-                </span>
-                {isSelected && <CheckCircle2 className="w-4 h-4 text-indigo-600" />}
+              <div className={`mt-2.5 pt-1.5 border-t flex items-center justify-between text-[10px] font-mono ${
+                isSelected ? 'border-slate-800 text-teal-400' : 'border-slate-100 text-slate-400'
+              }`}>
+                <span>SLA: {t.target_sla_hours}h</span>
+                {isSelected && <CheckCircle2 className="w-3.5 h-3.5 text-teal-400" />}
               </div>
             </div>
           );
@@ -179,46 +178,45 @@ export default function CreateRequestPage() {
 
       {/* Dynamic Workflow Form */}
       {selectedType && (
-        <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-slate-200/80 p-6 shadow-xs space-y-5">
+        <form onSubmit={handleSubmit} className="bg-white rounded-md border border-slate-300/80 p-5 shadow-2xs space-y-4">
           
-          <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+          <div className="border-b border-slate-200 pb-2.5 flex items-center justify-between">
             <div>
               <h2 className="text-sm font-bold text-slate-900">{selectedType.name}</h2>
-              <p className="text-[11px] text-slate-500 mt-0.5">Requester: {user.full_name} ({user.dept_name})</p>
+              <p className="text-[11px] text-slate-500">Requester: {user.full_name} ({user.dept_name})</p>
             </div>
             <div>
-              <span className="text-[10px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-2.5 py-1 rounded-lg inline-flex items-center gap-1">
-                <Clock className="w-3 h-3 text-indigo-600" />
-                SLA Window: {selectedType.target_sla_hours} Hours
+              <span className="text-[10px] font-mono font-bold text-slate-800 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-xs">
+                SLA: {selectedType.target_sla_hours}h
               </span>
             </div>
           </div>
 
           {error && (
-            <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium flex items-center gap-2">
-              <AlertCircle className="w-4 h-4" />
+            <div className="p-2.5 rounded-xs bg-rose-50 border border-rose-200 text-rose-800 text-xs font-medium flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 text-rose-600" />
               <span>{error}</span>
             </div>
           )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Request Title *</label>
+              <label className="block text-xs font-bold text-slate-800 mb-1">Request Title *</label>
               <input
                 type="text"
                 required
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                className="w-full px-3 py-1.5 border border-slate-300 rounded-xs text-xs focus:ring-2 focus:ring-slate-900 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Priority Level *</label>
+              <label className="block text-xs font-bold text-slate-800 mb-1">Priority Level *</label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value)}
-                className="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs bg-white text-slate-700 font-semibold focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-1.5 border border-slate-300 rounded-xs text-xs bg-white text-slate-800 font-semibold focus:ring-2 focus:ring-slate-900"
               >
                 <option value="LOW">Low Priority</option>
                 <option value="MEDIUM">Medium Priority</option>
@@ -228,16 +226,15 @@ export default function CreateRequestPage() {
             </div>
           </div>
 
-          <div className="space-y-4 pt-2 border-t border-slate-100">
-            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-              <FileText className="w-3.5 h-3.5 text-indigo-600" />
-              <span>Dynamic Form Inputs ({selectedType.code})</span>
+          <div className="space-y-3 pt-2 border-t border-slate-200">
+            <div className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider">
+              DYNAMIC_FORM_FIELDS ({selectedType.code})
             </div>
 
             {selectedType.form_schema?.fields?.map(field => (
               <div key={field.name}>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {field.label} {field.required && <span className="text-rose-500">*</span>}
+                <label className="block text-xs font-bold text-slate-800 mb-1">
+                  {field.label} {field.required && <span className="text-rose-600">*</span>}
                 </label>
 
                 {field.type === 'textarea' ? (
@@ -247,14 +244,14 @@ export default function CreateRequestPage() {
                     onChange={(e) => handleFieldChange(field.name, e.target.value)}
                     rows={3}
                     placeholder={`Enter ${field.label.toLowerCase()}...`}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-xs text-xs focus:ring-2 focus:ring-slate-900 focus:outline-none"
                   />
                 ) : field.type === 'select' ? (
                   <select
                     required={field.required}
                     value={formData[field.name] || ''}
                     onChange={(e) => handleFieldChange(field.name, e.target.value)}
-                    className="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs bg-white text-slate-700 font-medium focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-1.5 border border-slate-300 rounded-xs text-xs bg-white text-slate-800 font-medium focus:ring-2 focus:ring-slate-900"
                   >
                     <option value="">Select option...</option>
                     {field.options?.map(opt => (
@@ -268,18 +265,18 @@ export default function CreateRequestPage() {
                     value={formData[field.name] || ''}
                     onChange={(e) => handleFieldChange(field.name, e.target.value)}
                     placeholder={`Enter ${field.label.toLowerCase()}...`}
-                    className="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                    className="w-full px-3 py-1.5 border border-slate-300 rounded-xs text-xs focus:ring-2 focus:ring-slate-900 focus:outline-none"
                   />
                 )}
               </div>
             ))}
           </div>
 
-          <div className="pt-2 border-t border-slate-100">
-            <label className="block text-xs font-bold text-slate-700 mb-1">
-              Supporting Document / Receipt Attachment (Optional)
+          <div className="pt-2 border-t border-slate-200">
+            <label className="block text-xs font-bold text-slate-800 mb-1">
+              Supporting Attachment (Optional)
             </label>
-            <div className="border-2 border-dashed border-slate-300 rounded-xl p-4 text-center hover:bg-slate-50/60 transition cursor-pointer">
+            <div className="border-2 border-dashed border-slate-300 rounded-md p-4 text-center hover:bg-slate-50 transition cursor-pointer">
               <input
                 type="file"
                 id="file-upload"
@@ -287,35 +284,34 @@ export default function CreateRequestPage() {
                 className="hidden"
               />
               <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center">
-                <Upload className="w-5 h-5 text-indigo-500 mb-1" />
-                <span className="text-xs font-bold text-indigo-700">
-                  {file ? file.name : 'Click to select receipt or doc file (PDF, PNG, JPG, DOCX)'}
+                <Upload className="w-4 h-4 text-slate-600 mb-1" />
+                <span className="text-xs font-bold text-slate-900">
+                  {file ? file.name : 'Select receipt or quotation file to attach (PDF, PNG, JPG, DOCX)'}
                 </span>
-                <span className="text-[10px] text-slate-400 mt-0.5">Maximum size: 10MB</span>
+                <span className="text-[10px] text-slate-500 font-mono mt-0.5">MAX_SIZE: 10MB</span>
               </label>
             </div>
           </div>
 
-          <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-            <div className="text-[11px] text-slate-400 flex items-center gap-1">
-              <ShieldAlert className="w-3.5 h-3.5 text-slate-400" />
-              <span>Will route to Reporting Manager for initial approval.</span>
+          <div className="pt-3 border-t border-slate-200 flex items-center justify-between">
+            <div className="text-[10px] text-slate-500">
+              Will route to Reporting Manager for initial approval.
             </div>
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => navigate('/requests')}
-                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-lg transition"
+                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xs transition"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={submitting}
-                className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-lg shadow-xs flex items-center gap-1.5 transition disabled:opacity-50"
+                className="px-4 py-1.5 bg-teal-700 hover:bg-teal-800 text-white font-semibold text-xs rounded-xs shadow-xs flex items-center gap-1.5 transition disabled:opacity-50"
               >
                 <span>{submitting ? 'Submitting...' : 'Submit Request'}</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>
