@@ -13,8 +13,7 @@ import {
   CheckCircle2, 
   AlertCircle,
   FileText,
-  ShieldAlert,
-  Sparkles
+  ShieldAlert
 } from 'lucide-react';
 
 const WORKFLOW_ICONS = {
@@ -133,17 +132,15 @@ export default function CreateRequestPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 pb-8 font-sans text-slate-100">
+    <div className="max-w-4xl mx-auto space-y-4 pb-6 font-sans text-slate-900">
       
-      <div className="pb-3 border-b border-purple-900/20">
-        <h1 className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-purple-200 bg-clip-text text-transparent">
-          Create Request
-        </h1>
-        <p className="text-xs text-slate-400 mt-1">Select a business workflow type to initiate department review</p>
+      <div className="pb-3 border-b border-slate-200">
+        <h1 className="text-xl font-bold text-slate-900 tracking-tight">Create Request</h1>
+        <p className="text-xs text-slate-500 mt-0.5">Select a business workflow type to initiate department review</p>
       </div>
 
       {/* Workflow Category Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
         {requestTypes.map(t => {
           const Icon = WORKFLOW_ICONS[t.code] || Key;
           const isSelected = selectedTypeId === t.id;
@@ -152,27 +149,27 @@ export default function CreateRequestPage() {
             <div
               key={t.id}
               onClick={() => selectType(t)}
-              className={`p-4 rounded-2xl border cursor-pointer transition flex flex-col justify-between backdrop-blur-md ${
+              className={`p-3.5 rounded-md border cursor-pointer transition flex flex-col justify-between ${
                 isSelected
-                  ? 'bg-gradient-to-b from-violet-600/30 to-indigo-600/30 border-purple-500/60 shadow-xl shadow-purple-950/40 ring-1 ring-purple-400/40'
-                  : 'bg-slate-900/60 border-purple-500/10 hover:border-purple-500/30 hover:bg-violet-950/20'
+                  ? 'border-slate-900 bg-slate-900 text-white'
+                  : 'border-slate-300 bg-white hover:bg-slate-50'
               }`}
             >
               <div>
-                <div className={`w-8 h-8 rounded-xl flex items-center justify-center mb-3 ${
-                  isSelected ? 'bg-gradient-to-tr from-violet-600 to-indigo-600 text-white shadow-md shadow-violet-600/40' : 'bg-slate-800 text-slate-400'
+                <div className={`w-7 h-7 rounded-xs flex items-center justify-center mb-2 ${
+                  isSelected ? 'bg-teal-700 text-white' : 'bg-slate-100 text-slate-700'
                 }`}>
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-3.5 h-3.5" />
                 </div>
-                <h2 className={`text-xs font-bold ${isSelected ? 'text-white' : 'text-slate-200'}`}>{t.name}</h2>
-                <p className={`text-[10px] mt-1 line-clamp-2 ${isSelected ? 'text-purple-200' : 'text-slate-400'}`}>{t.description}</p>
+                <h2 className={`text-xs font-bold ${isSelected ? 'text-white' : 'text-slate-900'}`}>{t.name}</h2>
+                <p className={`text-[10px] mt-1 line-clamp-2 ${isSelected ? 'text-slate-300' : 'text-slate-500'}`}>{t.description}</p>
               </div>
 
-              <div className={`mt-3 pt-2 border-t flex items-center justify-between text-[10px] font-mono ${
-                isSelected ? 'border-purple-500/30 text-purple-300' : 'border-slate-800 text-slate-500'
+              <div className={`mt-2.5 pt-1.5 border-t flex items-center justify-between text-[10px] font-mono ${
+                isSelected ? 'border-slate-800 text-teal-400' : 'border-slate-100 text-slate-400'
               }`}>
                 <span>SLA: {t.target_sla_hours}h</span>
-                {isSelected && <CheckCircle2 className="w-4 h-4 text-purple-400" />}
+                {isSelected && <CheckCircle2 className="w-3.5 h-3.5 text-teal-400" />}
               </div>
             </div>
           );
@@ -181,45 +178,45 @@ export default function CreateRequestPage() {
 
       {/* Dynamic Workflow Form */}
       {selectedType && (
-        <form onSubmit={handleSubmit} className="glass-card rounded-2xl border border-purple-500/20 p-6 shadow-2xl space-y-5">
+        <form onSubmit={handleSubmit} className="bg-white rounded-md border border-slate-200 p-5 space-y-4">
           
-          <div className="border-b border-slate-800/80 pb-3 flex items-center justify-between">
+          <div className="border-b border-slate-200 pb-2.5 flex items-center justify-between">
             <div>
-              <h2 className="text-sm font-bold text-slate-100">{selectedType.name}</h2>
-              <p className="text-[11px] text-slate-400 mt-0.5">Requester: {user.full_name} ({user.dept_name})</p>
+              <h2 className="text-sm font-bold text-slate-900">{selectedType.name}</h2>
+              <p className="text-[11px] text-slate-500">Requester: {user.full_name} ({user.dept_name})</p>
             </div>
             <div>
-              <span className="text-[10px] font-mono font-bold text-purple-300 bg-purple-500/10 border border-purple-500/30 px-3 py-1 rounded-full">
-                SLA: {selectedType.target_sla_hours} Hours Target
+              <span className="text-[10px] font-mono font-bold text-slate-800 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-xs">
+                SLA: {selectedType.target_sla_hours}h Target
               </span>
             </div>
           </div>
 
           {error && (
-            <div className="p-3 rounded-xl bg-rose-500/20 border border-rose-500/30 text-rose-200 text-xs font-medium flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-rose-400" />
+            <div className="p-2.5 rounded-xs bg-rose-50 border border-rose-200 text-rose-800 text-xs font-medium flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 text-rose-600" />
               <span>{error}</span>
             </div>
           )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-slate-200 mb-1">Request Title *</label>
+              <label className="block text-xs font-bold text-slate-800 mb-1">Request Title *</label>
               <input
                 type="text"
                 required
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-3.5 py-2 bg-slate-950/80 border border-slate-800 rounded-xl text-xs text-white focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                className="w-full px-3 py-1.5 border border-slate-300 rounded-md text-xs focus-ring"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-200 mb-1">Priority Level *</label>
+              <label className="block text-xs font-bold text-slate-800 mb-1">Priority Level *</label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value)}
-                className="w-full px-3.5 py-2 bg-slate-950/80 border border-slate-800 rounded-xl text-xs text-slate-200 font-semibold focus:ring-2 focus:ring-purple-500"
+                className="w-full px-3 py-1.5 border border-slate-300 rounded-md text-xs bg-white text-slate-800 font-semibold focus-ring"
               >
                 <option value="LOW">Low Priority</option>
                 <option value="MEDIUM">Medium Priority</option>
@@ -229,16 +226,15 @@ export default function CreateRequestPage() {
             </div>
           </div>
 
-          <div className="space-y-4 pt-3 border-t border-slate-800/80">
-            <div className="text-[10px] font-mono font-bold text-purple-400 uppercase tracking-wider flex items-center gap-2">
-              <Sparkles className="w-3.5 h-3.5 text-purple-400" />
-              <span>DYNAMIC_FORM_INPUTS ({selectedType.code})</span>
+          <div className="space-y-3 pt-2 border-t border-slate-200">
+            <div className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider">
+              DYNAMIC_FORM_INPUTS ({selectedType.code})
             </div>
 
             {selectedType.form_schema?.fields?.map(field => (
               <div key={field.name}>
-                <label className="block text-xs font-bold text-slate-200 mb-1">
-                  {field.label} {field.required && <span className="text-rose-400">*</span>}
+                <label className="block text-xs font-bold text-slate-800 mb-1">
+                  {field.label} {field.required && <span className="text-rose-600">*</span>}
                 </label>
 
                 {field.type === 'textarea' ? (
@@ -248,14 +244,14 @@ export default function CreateRequestPage() {
                     onChange={(e) => handleFieldChange(field.name, e.target.value)}
                     rows={3}
                     placeholder={`Enter ${field.label.toLowerCase()}...`}
-                    className="w-full px-3.5 py-2.5 bg-slate-950/80 border border-slate-800 rounded-xl text-xs text-white focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md text-xs focus-ring"
                   />
                 ) : field.type === 'select' ? (
                   <select
                     required={field.required}
                     value={formData[field.name] || ''}
                     onChange={(e) => handleFieldChange(field.name, e.target.value)}
-                    className="w-full px-3.5 py-2 bg-slate-950/80 border border-slate-800 rounded-xl text-xs text-slate-200 font-medium focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-1.5 border border-slate-300 rounded-md text-xs bg-white text-slate-800 font-medium focus-ring"
                   >
                     <option value="">Select option...</option>
                     {field.options?.map(opt => (
@@ -269,18 +265,18 @@ export default function CreateRequestPage() {
                     value={formData[field.name] || ''}
                     onChange={(e) => handleFieldChange(field.name, e.target.value)}
                     placeholder={`Enter ${field.label.toLowerCase()}...`}
-                    className="w-full px-3.5 py-2 bg-slate-950/80 border border-slate-800 rounded-xl text-xs text-white focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                    className="w-full px-3 py-1.5 border border-slate-300 rounded-md text-xs focus-ring"
                   />
                 )}
               </div>
             ))}
           </div>
 
-          <div className="pt-3 border-t border-slate-800/80">
-            <label className="block text-xs font-bold text-slate-200 mb-1">
+          <div className="pt-2 border-t border-slate-200">
+            <label className="block text-xs font-bold text-slate-800 mb-1">
               Supporting Attachment (Optional)
             </label>
-            <div className="border-2 border-dashed border-purple-500/30 bg-slate-950/40 rounded-2xl p-5 text-center hover:bg-violet-950/20 hover:border-purple-500/50 transition cursor-pointer">
+            <div className="border-2 border-dashed border-slate-300 rounded-md p-4 text-center hover:bg-slate-50 transition cursor-pointer">
               <input
                 type="file"
                 id="file-upload"
@@ -288,34 +284,34 @@ export default function CreateRequestPage() {
                 className="hidden"
               />
               <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center">
-                <Upload className="w-5 h-5 text-purple-400 mb-1" />
-                <span className="text-xs font-bold text-purple-300">
-                  {file ? file.name : 'Click to select receipt or quotation file (PDF, PNG, JPG, DOCX)'}
+                <Upload className="w-4 h-4 text-slate-600 mb-1" />
+                <span className="text-xs font-bold text-slate-900">
+                  {file ? file.name : 'Select receipt or quotation file (PDF, PNG, JPG, DOCX)'}
                 </span>
-                <span className="text-[10px] text-slate-400 font-mono mt-1">MAX_SIZE: 10MB</span>
+                <span className="text-[10px] text-slate-500 font-mono mt-0.5">MAX_SIZE: 10MB</span>
               </label>
             </div>
           </div>
 
-          <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between">
-            <div className="text-[10px] text-slate-400">
+          <div className="pt-3 border-t border-slate-200 flex items-center justify-between">
+            <div className="text-[10px] text-slate-500">
               Will route to Reporting Manager for initial approval.
             </div>
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => navigate('/requests')}
-                className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold text-xs rounded-xl transition border border-slate-800"
+                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-md transition"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={submitting}
-                className="px-5 py-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-violet-600/30 flex items-center gap-2 transition disabled:opacity-50 border border-purple-400/30"
+                className="px-4 py-1.5 bg-teal-700 hover:bg-teal-800 text-white font-semibold text-xs rounded-md shadow-2xs flex items-center gap-1.5 transition disabled:opacity-50 focus-ring"
               >
                 <span>{submitting ? 'Submitting...' : 'Submit Request'}</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>

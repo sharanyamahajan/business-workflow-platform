@@ -4,43 +4,27 @@
 
 @layer base {
   body {
-    @apply bg-[#050814] text-slate-100 font-sans antialiased selection:bg-blue-500 selection:text-white min-h-screen;
-    background-image: 
-      radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.18), transparent 50%),
-      radial-gradient(circle at 80% 40%, rgba(99, 102, 241, 0.1), transparent 45%),
-      linear-gradient(180deg, rgba(6, 11, 28, 0.9) 0%, rgba(5, 8, 20, 1) 100%);
-    background-attachment: fixed;
+    @apply bg-slate-50 text-slate-900 font-sans antialiased selection:bg-teal-700 selection:text-white min-h-screen;
   }
 }
 
-/* Custom Scrollbar for deep navy UI */
+/* Custom Scrollbar for Ops Console */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #050814;
+  background: #f8fafc;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 9999px;
+  background: #cbd5e1;
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3b82f6;
+  background: #94a3b8;
 }
 
-.navy-glass-card {
-  background: rgba(10, 15, 36, 0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  box-shadow: 0 10px 35px 0 rgba(0, 0, 0, 0.5);
-}
-
-.navy-glass-card-hover {
-  transition: all 0.2s ease-in-out;
-}
-.navy-glass-card-hover:hover {
-  border-color: rgba(99, 102, 241, 0.4);
-  box-shadow: 0 15px 45px 0 rgba(59, 130, 246, 0.15);
+/* Focus Ring Utility */
+.focus-ring {
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-700 focus-visible:ring-offset-1;
 }
