@@ -1,68 +1,69 @@
 import React from 'react';
-import { Check, Clock, AlertCircle, XCircle } from 'lucide-react';
+import { CheckCircle2, Clock, XCircle, AlertCircle, PlayCircle } from 'lucide-react';
 
-export default function StageTimeline({ stages, currentStageId, status }) {
+export default function StageTimeline({ stages = [], currentStageId, status }) {
   if (!stages || stages.length === 0) return null;
 
   const currentStageIndex = stages.findIndex(s => s.id === currentStageId);
+  const isRejected = status === 'REJECTED';
+  const isChangesRequested = status === 'CHANGES_REQUESTED';
+  const isCompleted = status === 'COMPLETED';
 
   return (
-    <div className="w-full py-4">
+    <div className="w-full py-3">
       <div className="flex items-center justify-between relative">
+        
         {/* Background Connecting Line */}
-        <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-1 bg-slate-200 -z-0"></div>
-        <div 
-          className="absolute left-0 top-1/2 transform -translate-y-1/2 h-1 bg-blue-600 transition-all duration-500 -z-0"
-          style={{ width: `${(Math.max(0, currentStageIndex) / (stages.length - 1)) * 100}%` }}
-        ></div>
+        <div className="absolute top-4 left-6 right-6 h-0.5 bg-slate-200 -z-0" />
 
         {stages.map((stage, idx) => {
-          const isCompleted = idx < currentStageIndex || status === 'COMPLETED';
-          const isCurrent = idx === currentStageIndex && status !== 'COMPLETED' && status !== 'REJECTED';
-          const isRejected = status === 'REJECTED' && idx === currentStageIndex;
-          const isChangesReq = status === 'CHANGES_REQUESTED' && idx === 0;
+          const isPast = !isCompleted && idx < currentStageIndex;
+          const isCurrent = !isCompleted && idx === currentStageIndex;
+          const isFuture = idx > currentStageIndex;
+
+          let nodeBg = 'bg-white border-2 border-slate-300 text-slate-400';
+          let icon = <span className="text-xs font-bold">{stage.stage_order}</span>;
+
+          if (isCompleted || isPast) {
+            nodeBg = 'bg-emerald-600 border-2 border-emerald-600 text-white shadow-xs';
+            icon = <CheckCircle2 className="w-4 h-4" />;
+          } else if (isCurrent) {
+            if (isRejected) {
+              nodeBg = 'bg-rose-600 border-2 border-rose-600 text-white shadow-xs';
+              icon = <XCircle className="w-4 h-4" />;
+            } else if (isChangesRequested) {
+              nodeBg = 'bg-amber-500 border-2 border-amber-500 text-white shadow-xs animate-pulse';
+              icon = <AlertCircle className="w-4 h-4" />;
+            } else {
+              nodeBg = 'bg-indigo-600 border-2 border-indigo-600 text-white ring-4 ring-indigo-100 shadow-xs animate-pulse';
+              icon = <Clock className="w-4 h-4" />;
+            }
+          }
 
           return (
-            <div key={stage.id} className="relative z-10 flex flex-col items-center group">
+            <div key={stage.id} className="flex flex-col items-center relative z-10 group flex-1">
+              
               {/* Stage Circle Node */}
-              <div 
-                className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs shadow-sm transition-all duration-300 ${
-                  isCompleted 
-                    ? 'bg-blue-600 text-white ring-4 ring-blue-100' 
-                    : isRejected
-                    ? 'bg-rose-600 text-white ring-4 ring-rose-100'
-                    : isChangesReq
-                    ? 'bg-orange-500 text-white ring-4 ring-orange-100 animate-bounce'
-                    : isCurrent
-                    ? 'bg-indigo-600 text-white ring-4 ring-indigo-200 animate-pulse'
-                    : 'bg-white text-slate-400 border-2 border-slate-300'
-                }`}
-              >
-                {isCompleted ? (
-                  <Check className="w-5 h-5 stroke-[2.5]" />
-                ) : isRejected ? (
-                  <XCircle className="w-5 h-5" />
-                ) : isChangesReq ? (
-                  <AlertCircle className="w-5 h-5" />
-                ) : isCurrent ? (
-                  <Clock className="w-5 h-5" />
-                ) : (
-                  idx + 1
-                )}
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${nodeBg}`}>
+                {icon}
               </div>
 
-              {/* Stage Label & Details */}
-              <div className="mt-2 text-center max-w-[120px]">
-                <div className={`text-xs font-semibold ${isCurrent ? 'text-blue-700 font-bold' : isCompleted ? 'text-slate-800' : 'text-slate-400'}`}>
+              {/* Stage Name & Role Badge */}
+              <div className="mt-2 text-center max-w-[110px]">
+                <div className={`text-[11px] font-bold leading-tight ${
+                  isCurrent ? 'text-indigo-900' : isPast || isCompleted ? 'text-slate-800' : 'text-slate-400'
+                }`}>
                   {stage.stage_name}
                 </div>
-                <div className="text-[10px] text-slate-500 font-medium capitalize mt-0.5">
+                <div className="text-[9px] font-medium text-slate-400 mt-0.5 capitalize">
                   {stage.assigned_role_code.replace('_', ' ')}
                 </div>
               </div>
+
             </div>
           );
         })}
+
       </div>
     </div>
   );

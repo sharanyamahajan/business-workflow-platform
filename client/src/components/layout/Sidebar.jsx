@@ -5,144 +5,147 @@ import {
   LayoutDashboard, 
   FileText, 
   PlusCircle, 
+  ShieldCheck, 
+  Clock, 
   CheckSquare, 
-  BarChart3, 
-  ShieldCheck,
+  UserCheck, 
+  Settings,
   Layers,
   Inbox
 } from 'lucide-react';
 
 export default function Sidebar() {
   const { user } = useAuth();
+
   if (!user) return null;
 
-  const isAdminOrOps = ['SYSTEM_ADMIN', 'OPERATIONS_MANAGER'].includes(user.role_code);
-  const isManagerOrHead = ['REPORTING_MANAGER', 'DEPARTMENT_HEAD'].includes(user.role_code);
-  const isStaff = user.role_code === 'DEPARTMENT_STAFF';
+  const roleCode = user.role_code;
 
   return (
-    <aside className="w-64 bg-slate-900 text-slate-300 min-h-[calc(100vh-4rem)] p-4 flex flex-col justify-between border-r border-slate-800">
-      <div className="space-y-6">
+    <aside className="w-64 bg-white border-r border-slate-200/80 flex flex-col justify-between shrink-0 shadow-2xs">
+      
+      <div className="p-4 space-y-6">
         
-        {/* Navigation Group Main */}
-        <div>
-          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-3 px-3">
-            Main Navigation
+        {/* Primary Navigation Links */}
+        <div className="space-y-1">
+          <div className="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+            Main Portal
           </div>
-          <nav className="space-y-1">
-            <NavLink
-              to="/dashboard"
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-medium transition ${
-                  isActive ? 'bg-blue-600 text-white shadow-md shadow-blue-900/40 font-bold' : 'hover:bg-slate-800 hover:text-white'
-                }`
-              }
-            >
-              <LayoutDashboard className="w-4 h-4" />
-              <span>Dashboard</span>
-            </NavLink>
 
-            <NavLink
-              to="/requests"
-              end
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-medium transition ${
-                  isActive ? 'bg-blue-600 text-white shadow-md shadow-blue-900/40 font-bold' : 'hover:bg-slate-800 hover:text-white'
-                }`
-              }
-            >
-              <FileText className="w-4 h-4" />
-              <span>All Requests</span>
-            </NavLink>
+          <NavLink
+            to="/dashboard"
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold transition ${
+                isActive
+                  ? 'bg-indigo-50/80 text-indigo-700 font-bold border-l-4 border-indigo-600'
+                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+              }`
+            }
+          >
+            <LayoutDashboard className="w-4 h-4" />
+            <span>Dashboard</span>
+          </NavLink>
 
-            <NavLink
-              to="/requests/create"
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold bg-emerald-600/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-600/20 transition ${
-                  isActive ? 'bg-emerald-600 text-white border-emerald-600' : ''
-                }`
-              }
-            >
-              <PlusCircle className="w-4 h-4 text-emerald-500" />
-              <span>New Request</span>
-            </NavLink>
-          </nav>
+          <NavLink
+            to="/requests"
+            end
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold transition ${
+                isActive
+                  ? 'bg-indigo-50/80 text-indigo-700 font-bold border-l-4 border-indigo-600'
+                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+              }`
+            }
+          >
+            <Inbox className="w-4 h-4" />
+            <span>Central Requests Queue</span>
+          </NavLink>
+
+          <NavLink
+            to="/requests/create"
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold transition ${
+                isActive
+                  ? 'bg-indigo-50/80 text-indigo-700 font-bold border-l-4 border-indigo-600'
+                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+              }`
+            }
+          >
+            <PlusCircle className="w-4 h-4 text-indigo-600" />
+            <span className="text-indigo-700 font-bold">New Request</span>
+          </NavLink>
         </div>
 
-        {/* Role-Specific Workqueues */}
-        {(isManagerOrHead || isStaff) && (
-          <div>
-            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-3 px-3">
-              Action Queues
-            </div>
-            <nav className="space-y-1">
-              {isManagerOrHead && (
-                <NavLink
-                  to="/requests?scope=pending_approval"
-                  className={({ isActive }) =>
-                    `flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium transition ${
-                      isActive ? 'bg-blue-600 text-white' : 'hover:bg-slate-800 hover:text-white'
-                    }`
-                  }
-                >
-                  <div className="flex items-center gap-3">
-                    <CheckSquare className="w-4 h-4 text-amber-400" />
-                    <span>Pending Approvals</span>
-                  </div>
-                </NavLink>
-              )}
-
-              {isStaff && (
-                <NavLink
-                  to="/requests?scope=dept_queue"
-                  className={({ isActive }) =>
-                    `flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium transition ${
-                      isActive ? 'bg-blue-600 text-white' : 'hover:bg-slate-800 hover:text-white'
-                    }`
-                  }
-                >
-                  <div className="flex items-center gap-3">
-                    <Inbox className="w-4 h-4 text-purple-400" />
-                    <span>Dept Work Queue</span>
-                  </div>
-                </NavLink>
-              )}
-            </nav>
+        {/* Role-Specific Work Queues Shortcuts */}
+        <div className="space-y-1 pt-4 border-t border-slate-100">
+          <div className="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+            Role Work Queues
           </div>
-        )}
 
-        {/* Admin & Operations */}
-        {isAdminOrOps && (
-          <div>
-            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-3 px-3">
-              Administration
-            </div>
-            <nav className="space-y-1">
-              <NavLink
-                to="/admin"
-                className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-medium transition ${
-                    isActive ? 'bg-blue-600 text-white font-bold' : 'hover:bg-slate-800 hover:text-white'
-                  }`
-                }
-              >
-                <ShieldCheck className="w-4 h-4 text-indigo-400" />
-                <span>Workflow & Users</span>
-              </NavLink>
-            </nav>
-          </div>
-        )}
+          <NavLink
+            to="/requests?scope=my_requests"
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold transition ${
+                isActive ? 'bg-indigo-50/80 text-indigo-700 font-bold' : 'text-slate-600 hover:bg-slate-50'
+              }`
+            }
+          >
+            <FileText className="w-4 h-4 text-slate-400" />
+            <span>My Submissions</span>
+          </NavLink>
+
+          {(roleCode === 'REPORTING_MANAGER' || roleCode === 'DEPARTMENT_HEAD' || roleCode === 'SYSTEM_ADMIN') && (
+            <NavLink
+              to="/requests?scope=pending_approval"
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold transition ${
+                  isActive ? 'bg-indigo-50/80 text-indigo-700 font-bold' : 'text-slate-600 hover:bg-slate-50'
+                }`
+              }
+            >
+              <UserCheck className="w-4 h-4 text-amber-500" />
+              <span>Pending Approvals</span>
+            </NavLink>
+          )}
+
+          {(roleCode === 'DEPARTMENT_STAFF' || roleCode === 'SYSTEM_ADMIN') && (
+            <NavLink
+              to="/requests?scope=dept_queue"
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold transition ${
+                  isActive ? 'bg-indigo-50/80 text-indigo-700 font-bold' : 'text-slate-600 hover:bg-slate-50'
+                }`
+              }
+            >
+              <CheckSquare className="w-4 h-4 text-purple-500" />
+              <span>Department Queue</span>
+            </NavLink>
+          )}
+
+          {(roleCode === 'SYSTEM_ADMIN' || roleCode === 'OPERATIONS_MANAGER') && (
+            <NavLink
+              to="/admin"
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold transition ${
+                  isActive ? 'bg-indigo-50/80 text-indigo-700 font-bold' : 'text-slate-600 hover:bg-slate-50'
+                }`
+              }
+            >
+              <Settings className="w-4 h-4 text-indigo-600" />
+              <span>Administration</span>
+            </NavLink>
+          )}
+        </div>
 
       </div>
 
-      {/* Footer Role Badge */}
-      <div className="p-3 bg-slate-800/80 rounded-xl border border-slate-700/50 text-xs">
-        <div className="text-[10px] text-slate-400 font-semibold uppercase">Current Role Scope</div>
-        <div className="font-bold text-white mt-0.5">{user.role_name}</div>
-        <div className="text-[10px] text-slate-400 mt-1 flex items-center gap-1">
-          <Layers className="w-3 h-3 text-blue-400" />
-          <span>{user.dept_name} Dept</span>
+      {/* Streamlined Role Footer (No Dead Space) */}
+      <div className="p-3 m-3 rounded-xl bg-slate-50 border border-slate-200/80 text-xs">
+        <div className="flex items-center gap-2 text-slate-800 font-bold">
+          <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />
+          <span className="truncate">{user.role_name}</span>
         </div>
+        <div className="text-[10px] text-slate-500 mt-0.5 font-medium">{user.dept_name} Department</div>
       </div>
 
     </aside>

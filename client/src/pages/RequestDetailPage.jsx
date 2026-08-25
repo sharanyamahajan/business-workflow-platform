@@ -164,11 +164,11 @@ export default function RequestDetailPage() {
 
   if (error || !data) {
     return (
-      <div className="p-8 text-center bg-white rounded-2xl border border-slate-200">
-        <AlertCircle className="w-10 h-10 text-rose-500 mx-auto mb-2" />
-        <h2 className="text-sm font-bold text-slate-800">Error Loading Request</h2>
+      <div className="p-8 text-center bg-white rounded-xl border border-slate-200 shadow-xs">
+        <AlertCircle className="w-8 h-8 text-rose-500 mx-auto mb-2" />
+        <h2 className="text-xs font-bold text-slate-800">Error Loading Request</h2>
         <p className="text-xs text-slate-500 mt-1">{error || 'Request not found'}</p>
-        <Link to="/requests" className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold">Back to Requests</Link>
+        <Link to="/requests" className="mt-4 inline-block px-4 py-2 bg-indigo-600 text-white rounded-lg text-xs font-bold">Back to Queue</Link>
       </div>
     );
   }
@@ -186,67 +186,72 @@ export default function RequestDetailPage() {
   const canComplete = !isRequester && !isTerminal && (currentStage?.can_complete || request.status === 'PROCESSING');
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-7xl mx-auto pb-8">
       
-      <div className="flex items-center justify-between">
-        <Link to="/requests" className="inline-flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-blue-600 transition">
+      {/* Top Back Navigation Bar */}
+      <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+        <Link to="/requests" className="inline-flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-indigo-600 transition">
           <ChevronLeft className="w-4 h-4" />
-          <span>Back to Requests Central Queue</span>
+          <span>Back to Central Requests Queue</span>
         </Link>
-        <div className="text-xs text-slate-400 font-medium">
+        <div className="text-[11px] text-slate-400 font-medium">
           Submitted: {new Date(request.submitted_at).toLocaleString()}
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+      {/* Request Summary Banner */}
+      <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs space-y-4">
         
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
           <div>
-            <div className="flex items-center gap-3">
-              <span className="font-mono text-base font-bold text-blue-700 bg-blue-50 border border-blue-200 px-3 py-0.5 rounded-lg">
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-sm font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-2.5 py-0.5 rounded">
                 {request.request_number}
               </span>
               <StatusBadge status={request.status} />
               <SlaBadge sla={request.sla} />
             </div>
-            <h1 className="text-xl font-black text-slate-900 mt-2">{request.title}</h1>
-            <div className="text-xs text-slate-500 mt-0.5 flex items-center gap-4">
-              <span>Workflow: <strong className="text-slate-700">{request.request_type_name}</strong></span>
-              <span>Priority: <strong className="text-slate-700">{request.priority}</strong></span>
-              <span>Required Date: <strong className="text-slate-700">{request.required_date || 'N/A'}</strong></span>
+            <h1 className="text-xl font-extrabold text-slate-900 tracking-tight mt-2">{request.title}</h1>
+            <div className="text-xs text-slate-500 mt-1 flex items-center gap-4">
+              <span>Workflow: <strong className="text-slate-800">{request.request_type_name}</strong></span>
+              <span>Priority: <strong className="text-slate-800">{request.priority}</strong></span>
+              <span>Required: <strong className="text-slate-800">{request.required_date || 'N/A'}</strong></span>
             </div>
           </div>
 
-          <div className="text-left sm:text-right bg-slate-50 p-3 rounded-xl border border-slate-100 min-w-[220px]">
-            <div className="text-[10px] text-slate-400 font-bold uppercase">Requester & Department</div>
-            <div className="text-xs font-bold text-slate-800 mt-0.5">{request.requester_name}</div>
-            <div className="text-[10px] text-slate-500">{request.requester_dept_name} Department</div>
+          <div className="text-left sm:text-right bg-slate-50 p-3 rounded-lg border border-slate-200/80 min-w-[200px]">
+            <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Requester Context</div>
+            <div className="text-xs font-bold text-slate-900 mt-0.5">{request.requester_name}</div>
+            <div className="text-[10px] text-slate-500 font-medium">{request.requester_dept_name} Department</div>
           </div>
         </div>
 
+        {/* Visual Progress Timeline */}
         <div>
-          <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Workflow Lifecycle Progress</div>
+          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Workflow Lifecycle Progress</div>
           <StageTimeline stages={stages} currentStageId={request.current_stage_id} status={request.status} />
         </div>
 
       </div>
 
+      {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         <div className="lg:col-span-2 space-y-6">
           
+          {/* Action Management Panel */}
           {!isTerminal && (
-            <div className="bg-gradient-to-r from-slate-900 to-indigo-950 text-white rounded-2xl p-6 shadow-xl border border-slate-800">
+            <div className="bg-slate-900 text-white rounded-xl p-5 shadow-sm border border-slate-800">
               <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
                 <div>
-                  <h2 className="text-sm font-bold flex items-center gap-2 text-blue-300">
-                    <ShieldCheck className="w-4 h-4 text-blue-400" />
+                  <h2 className="text-xs font-bold flex items-center gap-2 text-indigo-400 uppercase tracking-wider">
+                    <ShieldCheck className="w-4 h-4 text-indigo-400" />
                     <span>Role Approval & Action Panel</span>
                   </h2>
-                  <p className="text-[11px] text-slate-400 mt-0.5">Current Stage: {request.stage_name} (Role: {request.assigned_role_code})</p>
+                  <p className="text-[11px] text-slate-400 mt-0.5">Current Stage: {request.stage_name} ({request.assigned_role_code})</p>
                 </div>
                 {isRequester && (
-                  <span className="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2.5 py-1 rounded font-bold">
+                  <span className="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded font-bold">
                     Requester Mode (No Self-Approval)
                   </span>
                 )}
@@ -259,24 +264,24 @@ export default function RequestDetailPage() {
               )}
 
               <div className="mb-4">
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Decision Comments / Fulfillment Notes</label>
+                <label className="block text-[11px] font-bold text-slate-300 mb-1">Decision Comments / Notes</label>
                 <input
                   type="text"
                   value={actionComments}
                   onChange={(e) => setActionComments(e.target.value)}
                   placeholder="Provide comments for approval decision or fulfillment update..."
-                  className="w-full px-3 py-2 bg-slate-800/90 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                 />
               </div>
 
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="flex flex-wrap items-center gap-2.5">
                 {canApprove && (
                   <button
                     onClick={() => handleAction('APPROVE')}
                     disabled={actionSubmitting}
-                    className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-600/30 flex items-center gap-1.5 transition disabled:opacity-50"
+                    className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 transition disabled:opacity-50"
                   >
-                    <CheckCircle className="w-4 h-4" />
+                    <CheckCircle className="w-3.5 h-3.5" />
                     <span>Approve Request</span>
                   </button>
                 )}
@@ -285,9 +290,9 @@ export default function RequestDetailPage() {
                   <button
                     onClick={() => setShowRejectModal(true)}
                     disabled={actionSubmitting}
-                    className="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-rose-600/30 flex items-center gap-1.5 transition disabled:opacity-50"
+                    className="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 transition disabled:opacity-50"
                   >
-                    <XCircle className="w-4 h-4" />
+                    <XCircle className="w-3.5 h-3.5" />
                     <span>Reject Request</span>
                   </button>
                 )}
@@ -296,9 +301,9 @@ export default function RequestDetailPage() {
                   <button
                     onClick={() => setShowChangesModal(true)}
                     disabled={actionSubmitting}
-                    className="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-amber-600/30 flex items-center gap-1.5 transition disabled:opacity-50"
+                    className="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 transition disabled:opacity-50"
                   >
-                    <HelpCircle className="w-4 h-4" />
+                    <HelpCircle className="w-3.5 h-3.5" />
                     <span>Request Changes</span>
                   </button>
                 )}
@@ -307,9 +312,9 @@ export default function RequestDetailPage() {
                   <button
                     onClick={() => handleAction('START_PROCESSING')}
                     disabled={actionSubmitting}
-                    className="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-purple-600/30 flex items-center gap-1.5 transition disabled:opacity-50"
+                    className="px-3.5 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 transition disabled:opacity-50"
                   >
-                    <Play className="w-4 h-4" />
+                    <Play className="w-3.5 h-3.5" />
                     <span>Start Processing</span>
                   </button>
                 )}
@@ -318,9 +323,9 @@ export default function RequestDetailPage() {
                   <button
                     onClick={() => handleAction('COMPLETE')}
                     disabled={actionSubmitting}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-600/30 flex items-center gap-1.5 transition disabled:opacity-50"
+                    className="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 transition disabled:opacity-50"
                   >
-                    <CheckSquare className="w-4 h-4" />
+                    <CheckSquare className="w-3.5 h-3.5" />
                     <span>Mark Completed</span>
                   </button>
                 )}
@@ -329,11 +334,12 @@ export default function RequestDetailPage() {
             </div>
           )}
 
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
-            <h3 className="font-bold text-slate-900 text-sm border-b border-slate-100 pb-3">Workflow Form Field Values</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+          {/* Form Data Card */}
+          <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs space-y-4">
+            <h3 className="font-bold text-slate-900 text-xs uppercase tracking-wider border-b border-slate-100 pb-2">Form Data Values</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
               {Object.entries(request.form_data || {}).map(([key, value]) => (
-                <div key={key} className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                <div key={key} className="bg-slate-50 p-3 rounded-lg border border-slate-100">
                   <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{key.replace(/([A-Z])/g, ' $1')}</div>
                   <div className="font-semibold text-slate-800 mt-1 whitespace-pre-wrap">{String(value)}</div>
                 </div>
@@ -341,15 +347,16 @@ export default function RequestDetailPage() {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-                <Paperclip className="w-4 h-4 text-blue-600" />
+          {/* Attachments Section */}
+          <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+              <h3 className="font-bold text-slate-900 text-xs uppercase tracking-wider flex items-center gap-2">
+                <Paperclip className="w-3.5 h-3.5 text-indigo-600" />
                 <span>Supporting Attachments ({attachments?.length || 0})</span>
               </h3>
 
-              <label htmlFor="detail-upload" className="px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-xs font-bold flex items-center gap-1 hover:bg-blue-100 transition cursor-pointer">
-                <Plus className="w-3.5 h-3.5" />
+              <label htmlFor="detail-upload" className="px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-bold flex items-center gap-1 hover:bg-indigo-100 transition cursor-pointer">
+                <Plus className="w-3 h-3" />
                 <span>Upload File</span>
                 <input
                   type="file"
@@ -361,12 +368,12 @@ export default function RequestDetailPage() {
               </label>
             </div>
 
-            {uploading && <div className="text-xs text-blue-600 font-medium">Uploading attachment...</div>}
+            {uploading && <div className="text-xs text-indigo-600 font-medium">Uploading attachment...</div>}
 
             {attachments?.length > 0 ? (
               <div className="space-y-2">
                 {attachments.map(att => (
-                  <div key={att.id} className="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between">
+                  <div key={att.id} className="p-3 bg-slate-50 rounded-lg border border-slate-100 flex items-center justify-between">
                     <div>
                       <div className="font-bold text-slate-800 text-xs">{att.original_name}</div>
                       <div className="text-[10px] text-slate-400 mt-0.5">
@@ -376,7 +383,7 @@ export default function RequestDetailPage() {
                     <a
                       href={`${API_BASE_URL}/api/requests/attachments/${att.id}/download`}
                       download
-                      className="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-bold flex items-center gap-1 hover:bg-blue-700 transition shadow-sm"
+                      className="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xs font-bold flex items-center gap-1 hover:bg-indigo-700 transition"
                     >
                       <Download className="w-3.5 h-3.5" />
                       <span>Download</span>
@@ -391,18 +398,19 @@ export default function RequestDetailPage() {
 
         </div>
 
+        {/* Right Column: Comments Thread & Audit Log */}
         <div className="space-y-6">
           
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
-            <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-3">
-              <MessageSquare className="w-4 h-4 text-indigo-600" />
+          <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs space-y-4">
+            <h3 className="font-bold text-slate-900 text-xs uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 pb-2">
+              <MessageSquare className="w-3.5 h-3.5 text-indigo-600" />
               <span>In-Thread Clarifications</span>
             </h3>
 
             <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
               {comments?.length > 0 ? (
                 comments.map(c => (
-                  <div key={c.id} className="p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs">
+                  <div key={c.id} className="p-3 rounded-lg bg-slate-50 border border-slate-100 text-xs">
                     <div className="flex items-center justify-between font-bold text-slate-800">
                       <span>{c.user_name} ({c.user_role})</span>
                       <span className="text-[10px] text-slate-400 font-normal">{new Date(c.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
@@ -419,9 +427,9 @@ export default function RequestDetailPage() {
               <textarea
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
-                placeholder="Write clarification or note..."
+                placeholder="Write clarification note..."
                 rows={2}
-                className="w-full p-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full p-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               />
               <button
                 type="submit"
@@ -433,16 +441,16 @@ export default function RequestDetailPage() {
             </form>
           </div>
 
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
-            <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2 border-b border-slate-100 pb-3">
-              <Clock className="w-4 h-4 text-emerald-600" />
+          <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs space-y-4">
+            <h3 className="font-bold text-slate-900 text-xs uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 pb-2">
+              <Clock className="w-3.5 h-3.5 text-emerald-600" />
               <span>Immutable Audit Trail</span>
             </h3>
 
             <div className="relative border-l-2 border-slate-200 ml-3 space-y-4 py-1">
               {auditTrail?.map(log => (
                 <div key={log.id} className="mb-4 ml-4 relative">
-                  <div className="absolute -left-[23px] top-0 w-3.5 h-3.5 rounded-full bg-blue-600 ring-4 ring-white"></div>
+                  <div className="absolute -left-[23px] top-0 w-3.5 h-3.5 rounded-full bg-indigo-600 ring-4 ring-white"></div>
                   <div className="text-xs font-bold text-slate-900">{log.action}</div>
                   <div className="text-[11px] text-slate-600">By {log.actor_name} ({log.actor_role})</div>
                   <div className="text-[10px] text-slate-400">{new Date(log.created_at).toLocaleString()}</div>
@@ -456,24 +464,23 @@ export default function RequestDetailPage() {
       </div>
 
       {showRejectModal && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4">
-            <h3 className="font-bold text-slate-900 text-base text-rose-600">Rejection Reason Required</h3>
-            <p className="text-xs text-slate-500">Business rules mandate providing an explicit rejection reason for audit history.</p>
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl p-5 max-w-md w-full shadow-xl space-y-4">
+            <h3 className="font-bold text-slate-900 text-sm text-rose-600">Rejection Reason Required</h3>
             <textarea
               required
               value={rejectionReason}
               onChange={(e) => setRejectionReason(e.target.value)}
               placeholder="State reason for rejecting request..."
               rows={3}
-              className="w-full p-3 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-rose-500 focus:outline-none"
+              className="w-full p-2.5 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-rose-500 focus:outline-none"
             />
-            <div className="flex items-center justify-end gap-2 pt-2">
-              <button onClick={() => setShowRejectModal(false)} className="px-4 py-2 bg-slate-100 text-slate-700 font-bold text-xs rounded-xl">Cancel</button>
+            <div className="flex items-center justify-end gap-2">
+              <button onClick={() => setShowRejectModal(false)} className="px-3 py-1.5 bg-slate-100 text-slate-700 font-bold text-xs rounded-lg">Cancel</button>
               <button
                 onClick={() => handleAction('REJECT')}
                 disabled={!rejectionReason.trim() || actionSubmitting}
-                className="px-4 py-2 bg-rose-600 text-white font-bold text-xs rounded-xl disabled:opacity-50"
+                className="px-3 py-1.5 bg-rose-600 text-white font-bold text-xs rounded-lg disabled:opacity-50"
               >
                 Confirm Rejection
               </button>
@@ -483,24 +490,23 @@ export default function RequestDetailPage() {
       )}
 
       {showChangesModal && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4">
-            <h3 className="font-bold text-slate-900 text-base text-amber-600">Request Changes / Clarifications</h3>
-            <p className="text-xs text-slate-500">Specify details required. Request will route back to requester for revision.</p>
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl p-5 max-w-md w-full shadow-xl space-y-4">
+            <h3 className="font-bold text-slate-900 text-sm text-amber-600">Request Changes / Clarifications</h3>
             <textarea
               required
               value={rejectionReason}
               onChange={(e) => setRejectionReason(e.target.value)}
               placeholder="Describe required changes or missing documents..."
               rows={3}
-              className="w-full p-3 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none"
+              className="w-full p-2.5 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none"
             />
-            <div className="flex items-center justify-end gap-2 pt-2">
-              <button onClick={() => setShowChangesModal(false)} className="px-4 py-2 bg-slate-100 text-slate-700 font-bold text-xs rounded-xl">Cancel</button>
+            <div className="flex items-center justify-end gap-2">
+              <button onClick={() => setShowChangesModal(false)} className="px-3 py-1.5 bg-slate-100 text-slate-700 font-bold text-xs rounded-lg">Cancel</button>
               <button
                 onClick={() => handleAction('REQUEST_CHANGES')}
                 disabled={!rejectionReason.trim() || actionSubmitting}
-                className="px-4 py-2 bg-amber-600 text-white font-bold text-xs rounded-xl disabled:opacity-50"
+                className="px-3 py-1.5 bg-amber-600 text-white font-bold text-xs rounded-lg disabled:opacity-50"
               >
                 Send Change Request
               </button>

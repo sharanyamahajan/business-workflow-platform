@@ -4,17 +4,16 @@ import { API_BASE_URL } from '../api/config';
 import { Link, useSearchParams } from 'react-router-dom';
 import StatusBadge from '../components/common/StatusBadge';
 import SlaBadge from '../components/common/SlaBadge';
-import { Search, Filter, Plus, ArrowUpDown, ChevronRight, FileText } from 'lucide-react';
+import { Search, Filter, Plus, ChevronRight, FileText, Inbox } from 'lucide-react';
 
 export default function RequestListPage() {
   const { user } = useAuth();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const [requests, setRequests] = useState([]);
   const [requestTypes, setRequestTypes] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Filters state
   const [search, setSearch] = useState(searchParams.get('search') || '');
   const [selectedType, setSelectedType] = useState(searchParams.get('request_type_id') || '');
   const [selectedStatus, setSelectedStatus] = useState(searchParams.get('status') || '');
@@ -76,29 +75,32 @@ export default function RequestListPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-7xl mx-auto pb-8">
       
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight">Requests Central Queue</h1>
-          <p className="text-xs text-slate-500 mt-1">Search, filter, and review requests across organization workflows</p>
+          <div className="flex items-center gap-2 mb-1">
+            <Inbox className="w-4 h-4 text-indigo-600" />
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Queue Operations</span>
+          </div>
+          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Requests Central Queue</h1>
         </div>
         <Link
           to="/requests/create"
-          className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-500/20 flex items-center gap-2 transition"
+          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-lg shadow-xs flex items-center gap-1.5 transition"
         >
-          <Plus className="w-4 h-4" />
-          <span>Submit Request</span>
+          <Plus className="w-3.5 h-3.5" />
+          <span>New Request</span>
         </Link>
       </div>
 
-      {/* Filter Bar */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+      {/* Filter & Scope Toolbar */}
+      <div className="bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs space-y-4">
         
-        {/* Scope Tabs */}
+        {/* Queue Scope Tabs */}
         <div className="flex flex-wrap items-center gap-2 border-b border-slate-100 pb-3">
-          <span className="text-xs font-bold text-slate-400 mr-2 uppercase tracking-wider">Queue Scope:</span>
+          <span className="text-[11px] font-bold text-slate-400 mr-2 uppercase tracking-wider">Queue Scope:</span>
           {[
             { id: 'all', label: 'All Accessible' },
             { id: 'my_requests', label: 'My Submissions' },
@@ -110,8 +112,8 @@ export default function RequestListPage() {
               onClick={() => setScope(tab.id)}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
                 scope === tab.id
-                  ? 'bg-blue-600 text-white shadow-sm font-bold'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  ? 'bg-indigo-600 text-white shadow-xs font-bold'
+                  : 'bg-slate-100/80 text-slate-600 hover:bg-slate-200/80'
               }`}
             >
               {tab.label}
@@ -122,23 +124,21 @@ export default function RequestListPage() {
         {/* Search & Select Filters */}
         <form onSubmit={handleSearchSubmit} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
           
-          {/* Search Field */}
           <div className="relative">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="REQ #, Title, Requester..."
-              className="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="Search REQ #, title..."
+              className="w-full pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none"
             />
           </div>
 
-          {/* Type Filter */}
           <select
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
-            className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs bg-white text-slate-700 font-medium focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs bg-white text-slate-700 font-medium focus:ring-2 focus:ring-indigo-500"
           >
             <option value="">All Workflow Types</option>
             {requestTypes.map(t => (
@@ -146,11 +146,10 @@ export default function RequestListPage() {
             ))}
           </select>
 
-          {/* Status Filter */}
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs bg-white text-slate-700 font-medium focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs bg-white text-slate-700 font-medium focus:ring-2 focus:ring-indigo-500"
           >
             <option value="">All Statuses</option>
             <option value="APPROVAL_PENDING">Approval Pending</option>
@@ -161,11 +160,10 @@ export default function RequestListPage() {
             <option value="REJECTED">Rejected</option>
           </select>
 
-          {/* Priority Filter */}
           <select
             value={selectedPriority}
             onChange={(e) => setSelectedPriority(e.target.value)}
-            className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs bg-white text-slate-700 font-medium focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs bg-white text-slate-700 font-medium focus:ring-2 focus:ring-indigo-500"
           >
             <option value="">All Priorities</option>
             <option value="LOW">Low</option>
@@ -174,11 +172,10 @@ export default function RequestListPage() {
             <option value="URGENT">Urgent</option>
           </select>
 
-          {/* SLA Filter */}
           <select
             value={selectedSla}
             onChange={(e) => setSelectedSla(e.target.value)}
-            className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs bg-white text-slate-700 font-medium focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs bg-white text-slate-700 font-medium focus:ring-2 focus:ring-indigo-500"
           >
             <option value="">All SLA States</option>
             <option value="WITHIN_SLA">Within SLA</option>
@@ -192,23 +189,23 @@ export default function RequestListPage() {
 
       </div>
 
-      {/* Requests Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      {/* Requests Data Table */}
+      <div className="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden">
         {loading ? (
           <div className="p-12 text-center text-xs text-slate-400">Filtering requests...</div>
         ) : requests.length === 0 ? (
           <div className="p-12 text-center">
-            <FileText className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-            <h3 className="text-sm font-bold text-slate-700">No requests found</h3>
-            <p className="text-xs text-slate-400 mt-1">Try adjusting search filters or selecting another queue scope.</p>
+            <FileText className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+            <h3 className="text-xs font-bold text-slate-700">No matching requests found</h3>
+            <p className="text-[11px] text-slate-400 mt-1">Try adjusting search filters or selecting another queue scope.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider">
+                <tr className="bg-slate-50/80 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
                   <th className="py-3 px-4">Request ID</th>
-                  <th className="py-3 px-4">Title & Workflow</th>
+                  <th className="py-3 px-4">Title & Category</th>
                   <th className="py-3 px-4">Requester</th>
                   <th className="py-3 px-4">Current Stage</th>
                   <th className="py-3 px-4">Status</th>
@@ -220,37 +217,37 @@ export default function RequestListPage() {
                 {requests.map(r => (
                   <tr key={r.id} className="hover:bg-slate-50/80 transition">
                     
-                    <td className="py-3.5 px-4 font-mono font-bold text-blue-700">
+                    <td className="py-3 px-4 font-mono font-bold text-indigo-700">
                       {r.request_number}
                     </td>
 
-                    <td className="py-3.5 px-4 max-w-xs">
-                      <div className="font-bold text-slate-900 truncate">{r.title}</div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">{r.request_type_name}</div>
+                    <td className="py-3 px-4 max-w-xs">
+                      <div className="font-semibold text-slate-900 truncate">{r.title}</div>
+                      <div className="text-[10px] text-slate-400">{r.request_type_name}</div>
                     </td>
 
-                    <td className="py-3.5 px-4">
+                    <td className="py-3 px-4">
                       <div className="font-semibold text-slate-800">{r.requester_name}</div>
                       <div className="text-[10px] text-slate-400">{r.requester_dept_name}</div>
                     </td>
 
-                    <td className="py-3.5 px-4">
+                    <td className="py-3 px-4">
                       <div className="font-medium text-slate-700">{r.stage_name}</div>
                       <div className="text-[10px] text-slate-400 capitalize">Role: {r.assigned_role_code.replace('_', ' ')}</div>
                     </td>
 
-                    <td className="py-3.5 px-4">
+                    <td className="py-3 px-4">
                       <StatusBadge status={r.status} />
                     </td>
 
-                    <td className="py-3.5 px-4">
+                    <td className="py-3 px-4">
                       <SlaBadge sla={r.sla} />
                     </td>
 
-                    <td className="py-3.5 px-4 text-right">
+                    <td className="py-3 px-4 text-right">
                       <Link
                         to={`/requests/${r.id}`}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold transition"
+                        className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs transition"
                       >
                         <span>View</span>
                         <ChevronRight className="w-3.5 h-3.5" />
