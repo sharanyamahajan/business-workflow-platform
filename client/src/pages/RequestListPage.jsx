@@ -4,7 +4,7 @@ import { API_BASE_URL } from '../api/config';
 import { Link, useSearchParams } from 'react-router-dom';
 import StatusBadge from '../components/common/StatusBadge';
 import SlaBadge from '../components/common/SlaBadge';
-import { Search, Plus, ChevronRight, FileText, Inbox } from 'lucide-react';
+import { Search, Plus, ChevronRight, FileText, Inbox, Layers } from 'lucide-react';
 
 export default function RequestListPage() {
   const { user } = useAuth();
@@ -75,32 +75,32 @@ export default function RequestListPage() {
   };
 
   return (
-    <div className="space-y-4 w-full font-sans text-slate-900">
+    <div className="space-y-6 max-w-7xl mx-auto pb-8 font-body text-slate-100 bg-grid-pattern">
       
-      {/* Header Title Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
+      {/* Header Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 mb-0.5">
-            <Inbox className="w-3.5 h-3.5 text-teal-700" />
-            <span>QUEUE OPERATIONS</span>
+          <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#F7931A] mb-1">
+            <Layers className="w-3.5 h-3.5" />
+            <span>LEDGER_OPERATIONS / QUEUE</span>
           </div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">Requests Central Queue</h1>
+          <h1 className="text-2xl font-heading font-extrabold text-white tracking-tight">Requests Central Queue</h1>
         </div>
         <Link
           to="/requests/create"
-          className="px-3.5 py-1.5 bg-teal-700 hover:bg-teal-800 text-white font-semibold text-xs rounded-md shadow-2xs inline-flex items-center gap-1.5 transition focus-ring"
+          className="px-5 py-2.5 bg-gradient-to-r from-[#EA580C] via-[#F7931A] to-[#FFD600] text-white font-heading font-bold text-xs rounded-full shadow-[0_0_25px_-5px_rgba(234,88,12,0.6)] hover:scale-105 transition-all duration-300 inline-flex items-center gap-2 border border-white/20"
         >
-          <Plus className="w-3.5 h-3.5" />
+          <Plus className="w-4 h-4" />
           <span>New Request</span>
         </Link>
       </div>
 
-      {/* Scope Tabs & Filter Toolbar */}
-      <div className="bg-white p-3 rounded-md border border-slate-200 space-y-3">
+      {/* Scope Tabs & Filter Controls */}
+      <div className="btc-card p-4 rounded-2xl space-y-4">
         
-        {/* Scope Tabs */}
-        <div className="flex flex-wrap items-center gap-1.5 border-b border-slate-200 pb-2.5">
-          <span className="text-[10px] font-mono font-bold text-slate-500 mr-2 uppercase tracking-wider">QUEUE_SCOPE:</span>
+        {/* Scope Pills */}
+        <div className="flex flex-wrap items-center gap-2 border-b border-white/10 pb-3">
+          <span className="text-[10px] font-mono font-bold text-[#F7931A] mr-2 uppercase tracking-widest">QUEUE_SCOPE:</span>
           {[
             { id: 'all', label: 'All Accessible' },
             { id: 'my_requests', label: 'My Submissions' },
@@ -110,10 +110,10 @@ export default function RequestListPage() {
             <button
               key={tab.id}
               onClick={() => setScope(tab.id)}
-              className={`px-2.5 py-1 rounded-xs text-xs transition font-sans focus-ring ${
+              className={`px-3 py-1 rounded-full text-xs font-mono transition ${
                 scope === tab.id
-                  ? 'bg-slate-900 text-white font-bold border-l-2 border-teal-600'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  ? 'bg-gradient-to-r from-[#EA580C] to-[#F7931A] text-white font-bold shadow-[0_0_15px_rgba(247,147,26,0.5)] border border-[#FFD600]/30'
+                  : 'bg-black/40 text-slate-400 border border-white/10 hover:bg-white/10 hover:text-white'
               }`}
             >
               {tab.label}
@@ -121,136 +121,136 @@ export default function RequestListPage() {
           ))}
         </div>
 
-        {/* Filters Grid */}
-        <form onSubmit={handleSearchSubmit} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
+        {/* Minimalist Technical Inputs */}
+        <form onSubmit={handleSearchSubmit} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
           
           <div className="relative">
-            <Search className="w-3 h-3 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search REQ #, title..."
-              className="w-full pl-7 pr-2.5 py-1 border border-slate-300 rounded-md text-xs focus-ring"
+              className="w-full pl-8 pr-3 py-2 bg-black/50 border-b-2 border-white/20 rounded-lg text-xs text-white placeholder:text-slate-500 focus-visible:border-[#F7931A] focus-visible:outline-none focus-visible:shadow-[0_10px_20px_-10px_rgba(247,147,26,0.3)]"
             />
           </div>
 
           <select
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
-            className="w-full px-2.5 py-1 border border-slate-300 rounded-md text-xs bg-white text-slate-700 font-medium focus-ring"
+            className="w-full px-3 py-2 bg-black/50 border-b-2 border-white/20 rounded-lg text-xs text-white focus-visible:border-[#F7931A] focus-visible:outline-none"
           >
-            <option value="">All Workflow Types</option>
+            <option value="" className="bg-[#0F1115]">All Workflow Types</option>
             {requestTypes.map(t => (
-              <option key={t.id} value={t.id}>{t.name}</option>
+              <option key={t.id} value={t.id} className="bg-[#0F1115]">{t.name}</option>
             ))}
           </select>
 
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="w-full px-2.5 py-1 border border-slate-300 rounded-md text-xs bg-white text-slate-700 font-medium focus-ring"
+            className="w-full px-3 py-2 bg-black/50 border-b-2 border-white/20 rounded-lg text-xs text-white focus-visible:border-[#F7931A] focus-visible:outline-none"
           >
-            <option value="">All Statuses</option>
-            <option value="APPROVAL_PENDING">Approval Pending</option>
-            <option value="PROCESSING">Processing</option>
-            <option value="CHANGES_REQUESTED">Changes Requested</option>
-            <option value="APPROVED">Approved</option>
-            <option value="COMPLETED">Completed</option>
-            <option value="REJECTED">Rejected</option>
+            <option value="" className="bg-[#0F1115]">All Statuses</option>
+            <option value="APPROVAL_PENDING" className="bg-[#0F1115]">Approval Pending</option>
+            <option value="PROCESSING" className="bg-[#0F1115]">Processing</option>
+            <option value="CHANGES_REQUESTED" className="bg-[#0F1115]">Changes Requested</option>
+            <option value="APPROVED" className="bg-[#0F1115]">Approved</option>
+            <option value="COMPLETED" className="bg-[#0F1115]">Completed</option>
+            <option value="REJECTED" className="bg-[#0F1115]">Rejected</option>
           </select>
 
           <select
             value={selectedPriority}
             onChange={(e) => setSelectedPriority(e.target.value)}
-            className="w-full px-2.5 py-1 border border-slate-300 rounded-md text-xs bg-white text-slate-700 font-medium focus-ring"
+            className="w-full px-3 py-2 bg-black/50 border-b-2 border-white/20 rounded-lg text-xs text-white focus-visible:border-[#F7931A] focus-visible:outline-none"
           >
-            <option value="">All Priorities</option>
-            <option value="LOW">Low</option>
-            <option value="MEDIUM">Medium</option>
-            <option value="HIGH">High</option>
-            <option value="URGENT">Urgent</option>
+            <option value="" className="bg-[#0F1115]">All Priorities</option>
+            <option value="LOW" className="bg-[#0F1115]">Low</option>
+            <option value="MEDIUM" className="bg-[#0F1115]">Medium</option>
+            <option value="HIGH" className="bg-[#0F1115]">High</option>
+            <option value="URGENT" className="bg-[#0F1115]">Urgent</option>
           </select>
 
           <select
             value={selectedSla}
             onChange={(e) => setSelectedSla(e.target.value)}
-            className="w-full px-2.5 py-1 border border-slate-300 rounded-md text-xs bg-white text-slate-700 font-medium focus-ring"
+            className="w-full px-3 py-2 bg-black/50 border-b-2 border-white/20 rounded-lg text-xs text-white focus-visible:border-[#F7931A] focus-visible:outline-none"
           >
-            <option value="">All SLA States</option>
-            <option value="WITHIN_SLA">Within SLA</option>
-            <option value="APPROACHING_SLA">Approaching SLA</option>
-            <option value="OVERDUE">Overdue</option>
-            <option value="COMPLETED_WITHIN_SLA">Completed within SLA</option>
-            <option value="COMPLETED_AFTER_SLA">Completed Overdue</option>
+            <option value="" className="bg-[#0F1115]">All SLA States</option>
+            <option value="WITHIN_SLA" className="bg-[#0F1115]">Within SLA</option>
+            <option value="APPROACHING_SLA" className="bg-[#0F1115]">Approaching SLA</option>
+            <option value="OVERDUE" className="bg-[#0F1115]">Overdue</option>
+            <option value="COMPLETED_WITHIN_SLA" className="bg-[#0F1115]">Completed within SLA</option>
+            <option value="COMPLETED_AFTER_SLA" className="bg-[#0F1115]">Completed Overdue</option>
           </select>
 
         </form>
 
       </div>
 
-      {/* Requests Data Table */}
-      <div className="bg-white rounded-md border border-slate-200 overflow-hidden">
+      {/* Requests Table */}
+      <div className="btc-card rounded-2xl overflow-hidden">
         {loading ? (
-          <div className="p-8 text-center text-xs font-mono text-slate-400">FILTERING_QUEUE_DATA...</div>
+          <div className="p-8 text-center text-xs font-mono text-[#FFD600]">QUERYING_BITCOIN_LEDGER...</div>
         ) : requests.length === 0 ? (
           <div className="p-8 text-center">
-            <FileText className="w-6 h-6 text-slate-300 mx-auto mb-1" />
-            <h3 className="text-xs font-bold text-slate-700">No matching requests found</h3>
-            <p className="text-[10px] text-slate-400 font-mono mt-0.5">TRY_ADJUSTING_SEARCH_FILTERS</p>
+            <FileText className="w-8 h-8 text-slate-500 mx-auto mb-2" />
+            <h3 className="text-xs font-heading font-bold text-white uppercase">No matching requests found</h3>
+            <p className="text-[10px] text-slate-400 font-mono mt-0.5">TRY_ADJUSTING_FILTER_PARAMETERS</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-slate-900 text-white font-mono text-[9px] font-bold uppercase tracking-wider">
-                  <th className="py-2.5 px-3">REQ_ID</th>
-                  <th className="py-2.5 px-3">TITLE / TYPE</th>
-                  <th className="py-2.5 px-3">REQUESTER</th>
-                  <th className="py-2.5 px-3">STAGE</th>
-                  <th className="py-2.5 px-3">STATUS</th>
-                  <th className="py-2.5 px-3">SLA</th>
-                  <th className="py-2.5 px-3 text-right">ACTION</th>
+                <tr className="bg-[#030304] border-b border-white/10 text-slate-400 font-mono text-[9px] font-bold uppercase tracking-widest">
+                  <th className="py-3 px-4">REQ_ID</th>
+                  <th className="py-3 px-4">TITLE / TYPE</th>
+                  <th className="py-3 px-4">REQUESTER</th>
+                  <th className="py-3 px-4">STAGE</th>
+                  <th className="py-3 px-4">STATUS</th>
+                  <th className="py-3 px-4">SLA</th>
+                  <th className="py-3 px-4 text-right">ACTION</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200 font-sans">
+              <tbody className="divide-y divide-white/5 font-body">
                 {requests.map(r => (
-                  <tr key={r.id} className="hover:bg-slate-50 transition">
+                  <tr key={r.id} className="hover:bg-[#F7931A]/10 transition">
                     
-                    <td className="py-2 px-3 font-mono font-bold text-slate-900">
+                    <td className="py-3 px-4 font-mono font-bold text-[#F7931A]">
                       {r.request_number}
                     </td>
 
-                    <td className="py-2 px-3 max-w-xs">
-                      <div className="font-semibold text-slate-900 truncate">{r.title}</div>
-                      <div className="text-[10px] text-slate-500">{r.request_type_name}</div>
+                    <td className="py-3 px-4 max-w-xs">
+                      <div className="font-heading font-bold text-white truncate">{r.title}</div>
+                      <div className="text-[10px] text-slate-400 font-mono">{r.request_type_name}</div>
                     </td>
 
-                    <td className="py-2 px-3">
-                      <div className="font-semibold text-slate-800">{r.requester_name}</div>
-                      <div className="text-[10px] text-slate-500">{r.requester_dept_name}</div>
+                    <td className="py-3 px-4">
+                      <div className="font-bold text-slate-200">{r.requester_name}</div>
+                      <div className="text-[10px] text-slate-400 font-mono">{r.requester_dept_name}</div>
                     </td>
 
-                    <td className="py-2 px-3">
-                      <div className="font-medium text-slate-700">{r.stage_name}</div>
-                      <div className="text-[10px] text-slate-400 capitalize">{r.assigned_role_code.replace('_', ' ')}</div>
+                    <td className="py-3 px-4">
+                      <div className="font-medium text-slate-300">{r.stage_name}</div>
+                      <div className="text-[10px] text-slate-400 font-mono capitalize">{r.assigned_role_code.replace('_', ' ')}</div>
                     </td>
 
-                    <td className="py-2 px-3">
+                    <td className="py-3 px-4">
                       <StatusBadge status={r.status} />
                     </td>
 
-                    <td className="py-2 px-3">
+                    <td className="py-3 px-4">
                       <SlaBadge sla={r.sla} />
                     </td>
 
-                    <td className="py-2 px-3 text-right">
+                    <td className="py-3 px-4 text-right">
                       <Link
                         to={`/requests/${r.id}`}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xs bg-slate-900 hover:bg-slate-800 text-white font-mono text-[10px] font-bold transition focus-ring"
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-gradient-to-r from-[#EA580C] to-[#F7931A] text-white font-mono text-[10px] font-bold shadow-[0_0_15px_rgba(247,147,26,0.4)] hover:scale-105 transition"
                       >
-                        <span>VIEW</span>
-                        <ChevronRight className="w-3 h-3" />
+                        <span>EXECUTE</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
                       </Link>
                     </td>
 
