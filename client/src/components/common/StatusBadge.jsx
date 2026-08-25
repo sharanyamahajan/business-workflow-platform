@@ -12,42 +12,42 @@ import {
 const STATUS_CONFIG = {
   SUBMITTED: {
     label: 'Submitted',
-    bg: 'bg-indigo-500/10 border-indigo-500/30 text-indigo-300 shadow-xs shadow-indigo-950/30',
+    bg: 'bg-blue-950/60 border-blue-500/30 text-blue-300',
     icon: Clock
   },
   APPROVAL_PENDING: {
     label: 'Approval Pending',
-    bg: 'bg-purple-500/15 border-purple-500/40 text-purple-300 shadow-xs shadow-purple-950/40 animate-pulse',
+    bg: 'bg-amber-950/70 border-amber-500/40 text-amber-300 animate-pulse font-bold',
     icon: Clock
   },
   PROCESSING: {
     label: 'Processing',
-    bg: 'bg-cyan-500/15 border-cyan-500/30 text-cyan-300 shadow-xs shadow-cyan-950/30',
+    bg: 'bg-cyan-950/60 border-cyan-500/30 text-cyan-300',
     icon: Play
   },
   CHANGES_REQUESTED: {
     label: 'Changes Requested',
-    bg: 'bg-amber-500/15 border-amber-500/40 text-amber-300 shadow-xs shadow-amber-950/40',
+    bg: 'bg-purple-950/60 border-purple-500/40 text-purple-300',
     icon: AlertCircle
   },
   APPROVED: {
     label: 'Approved',
-    bg: 'bg-teal-500/15 border-teal-500/30 text-teal-300 shadow-xs shadow-teal-950/30',
+    bg: 'bg-teal-950/60 border-teal-500/30 text-teal-300',
     icon: CheckCircle2
   },
   COMPLETED: {
     label: 'Completed',
-    bg: 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300 shadow-xs shadow-emerald-950/30',
+    bg: 'bg-emerald-950/80 border-emerald-500/40 text-emerald-400 font-bold',
     icon: FileCheck2
   },
   REJECTED: {
     label: 'Rejected',
-    bg: 'bg-rose-500/15 border-rose-500/30 text-rose-300 shadow-xs shadow-rose-950/30',
+    bg: 'bg-rose-950/70 border-rose-500/40 text-rose-300',
     icon: XCircle
   },
   CANCELLED: {
     label: 'Cancelled',
-    bg: 'bg-slate-500/15 border-slate-500/30 text-slate-400',
+    bg: 'bg-slate-900 border-slate-700 text-slate-400',
     icon: MinusCircle
   }
 };
@@ -55,7 +55,7 @@ const STATUS_CONFIG = {
 export default function StatusBadge({ status }) {
   const config = STATUS_CONFIG[status] || {
     label: status || 'Unknown',
-    bg: 'bg-slate-500/15 border-slate-500/30 text-slate-400',
+    bg: 'bg-slate-900 border-slate-700 text-slate-400',
     icon: Clock
   };
 
