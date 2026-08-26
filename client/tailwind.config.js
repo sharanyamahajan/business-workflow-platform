@@ -4,32 +4,29 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        void: '#030304',
-        darkmatter: '#0F1115',
-        btc: {
-          DEFAULT: '#F7931A',
-          hover: '#e08213',
-          glow: 'rgba(247, 147, 26, 0.6)',
-        },
-        burnt: '#EA580C',
-        gold: '#FFD600',
-        stardust: '#94A3B8',
-        dim: '#1E293B',
+        neu: {
+          bg: '#E0E5EC',
+          base: '#E0E5EC',
+          text: '#3D4852',
+          muted: '#6B7280',
+          accent: '#6C63FF',
+          accentLight: '#8B84FF',
+          teal: '#38B2AC',
+          rose: '#E53E3E',
+          amber: '#DD6B20',
+        }
       },
       fontFamily: {
-        heading: ['Space Grotesk', 'sans-serif'],
-        body: ['Inter', 'sans-serif'],
+        display: ['Plus Jakarta Sans', 'sans-serif'],
+        body: ['DM Sans', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
-      boxShadow: {
-        'orange-glow': '0 0 25px -5px rgba(234, 88, 12, 0.5)',
-        'btc-glow': '0 0 30px -5px rgba(247, 147, 26, 0.6)',
-        'gold-glow': '0 0 25px -5px rgba(255, 214, 0, 0.5)',
-        'card-glow': '0 0 50px -10px rgba(247, 147, 26, 0.15)',
+      borderRadius: {
+        '3xl': '24px',
+        '4xl': '32px',
       }
     },
   },

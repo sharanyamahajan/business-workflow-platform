@@ -24,14 +24,11 @@ import {
   Award,
   BarChart3,
   PieChart as PieIcon,
-  Zap,
-  Shield,
-  Layers,
-  ArrowRight
+  Sparkles
 } from 'lucide-react';
 
-const CATEGORY_COLORS = ['#F7931A', '#EA580C', '#FFD600', '#06b6d4', '#ec4899'];
-const DEPT_COLORS = ['#F7931A', '#FFD600', '#EA580C', '#10b981', '#06b6d4', '#64748b'];
+const CATEGORY_COLORS = ['#6C63FF', '#38B2AC', '#DD6B20', '#3182CE', '#805AD5'];
+const DEPT_COLORS = ['#6C63FF', '#38B2AC', '#DD6B20', '#3182CE', '#E53E3E', '#718096'];
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -62,11 +59,11 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px]">
-        <div className="w-12 h-12 rounded-full bg-[#F7931A]/20 border border-[#F7931A]/50 flex items-center justify-center mb-3 animate-spin shadow-[0_0_25px_rgba(247,147,26,0.5)]">
-          <Zap className="w-6 h-6 text-[#F7931A]" />
+        <div className="w-12 h-12 rounded-full neu-inset-deep flex items-center justify-center mb-3 text-[#6C63FF]">
+          <Activity className="w-6 h-6 animate-spin" />
         </div>
-        <div className="font-mono text-xs text-[#FFD600] tracking-widest uppercase">
-          SYNCHRONIZING_BITCOIN_LEDGER_METRICS...
+        <div className="font-mono text-xs text-[#6B7280] font-bold uppercase">
+          MOLDING_NEUMORPHIC_DASHBOARD...
         </div>
       </div>
     );
@@ -78,201 +75,189 @@ export default function DashboardPage() {
   const deptChartData = Object.entries(metrics.byDepartment || {}).map(([name, count]) => ({ name, count }));
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto pb-8 font-body text-slate-100 bg-grid-pattern">
+    <div className="space-y-6 max-w-7xl mx-auto pb-8 font-body text-[#3D4852]">
       
-      {/* 1. Hero Header Banner */}
-      <div className="relative overflow-hidden rounded-2xl p-6 sm:p-8 btc-card border border-white/10 shadow-[0_0_50px_-10px_rgba(247,147,26,0.15)]">
-        <div className="absolute top-0 right-0 -mt-10 -mr-10 w-72 h-72 bg-[#F7931A] opacity-10 blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-72 h-72 bg-[#EA580C] opacity-10 blur-[120px] pointer-events-none" />
-
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F7931A]/10 border border-[#F7931A]/30 text-[#FFD600] text-xs font-mono font-bold">
-              <Zap className="w-3.5 h-3.5 text-[#F7931A]" />
-              <span>{user.role_name} Node Scope</span>
-              <span>•</span>
-              <span>{user.dept_name}</span>
-            </div>
-
-            <h1 className="text-3xl sm:text-4xl font-heading font-extrabold tracking-tight text-white">
-              Bitcoin DeFi <span className="text-gradient-btc">Workflow Engine</span>
-            </h1>
-
-            <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
-              Cryptographic SLA monitoring, automated multi-stage approvals, and immutable ledger execution.
-            </p>
+      {/* 1. Header Bar: Elevated Tactile Container */}
+      <div className="p-6 rounded-[32px] neu-extruded flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#6C63FF] mb-1">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>OPERATIONS_COMMAND</span>
+            <span>•</span>
+            <span className="text-[#3D4852]">{user.role_name}</span>
           </div>
+          <h1 className="text-2xl font-display font-extrabold text-[#3D4852] tracking-tight">Operations Command Console</h1>
+          <p className="text-xs text-[#6B7280] mt-0.5">Real-time workflow execution, SLA target monitoring & queue metrics</p>
+        </div>
 
-          <div className="shrink-0">
-            <Link
-              to="/requests/create"
-              className="px-6 py-3 bg-gradient-to-r from-[#EA580C] via-[#F7931A] to-[#FFD600] text-white font-heading font-bold text-xs rounded-full shadow-[0_0_25px_-5px_rgba(234,88,12,0.6)] hover:scale-105 transition-all duration-300 flex items-center gap-2 border border-white/20"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Create Request</span>
-            </Link>
-          </div>
+        <div>
+          <Link
+            to="/requests/create"
+            className="px-5 py-2.5 neu-button-primary text-white font-display font-bold text-xs rounded-2xl flex items-center gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Create Request</span>
+          </Link>
         </div>
       </div>
 
-      {/* 2. Critical Overdue SLA Callout */}
+      {/* 2. Critical Overdue Callout (Carved Inset Well) */}
       {metrics.overdueCount > 0 && (
-        <div className="rounded-2xl p-4 bg-rose-950/40 backdrop-blur-xl border border-rose-500/50 shadow-[0_0_25px_rgba(244,63,94,0.3)] flex items-center justify-between animate-pulse">
+        <div className="p-4 rounded-3xl neu-inset text-[#E53E3E] flex items-center justify-between animate-pulse">
           <div className="flex items-center gap-3 text-xs">
-            <div className="w-8 h-8 rounded-full bg-rose-500/20 border border-rose-500/50 flex items-center justify-center shrink-0">
-              <Flame className="w-4 h-4 text-rose-400" />
+            <div className="w-8 h-8 rounded-2xl neu-inset-deep flex items-center justify-center shrink-0">
+              <Flame className="w-4 h-4 text-[#E53E3E]" />
             </div>
             <div>
-              <span className="font-mono font-bold text-rose-300 uppercase tracking-wider mr-2">[CRITICAL_SLA_BREACH]</span>
-              <span className="text-rose-200 font-medium">
-                {metrics.overdueCount} request(s) exceeded target resolution SLA window.
+              <span className="font-mono font-bold uppercase tracking-wider mr-2">[CRITICAL_SLA_BREACH]</span>
+              <span className="font-medium text-[#3D4852]">
+                {metrics.overdueCount} request(s) exceeded target resolution SLA limit.
               </span>
             </div>
           </div>
           <Link
             to="/requests?sla_status=OVERDUE"
-            className="text-xs font-mono font-bold px-4 py-1.5 rounded-full bg-rose-600 text-white hover:bg-rose-500 transition shrink-0 ml-4 shadow-md"
+            className="text-xs font-display font-bold px-4 py-1.5 rounded-2xl neu-button-secondary text-[#E53E3E] shrink-0 ml-4"
           >
             RESOLVE NOW →
           </Link>
         </div>
       )}
 
-      {/* 3. Bitcoin Fire KPI Metric Ribbon */}
+      {/* 3. Neumorphic KPI Cards Ribbon */}
       {['OPERATIONS_MANAGER', 'SYSTEM_ADMIN', 'DEPARTMENT_HEAD'].includes(metrics.role) ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-          <div className="btc-card p-4 rounded-2xl">
-            <div className="text-[10px] font-mono font-bold uppercase tracking-widest text-slate-400">Total Volume</div>
-            <div className="text-2xl font-mono font-extrabold text-white mt-1">{metrics.totalRequests}</div>
-            <div className="text-[10px] text-[#F7931A] font-mono mt-1 font-bold">+12.4% active</div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="p-5 rounded-3xl neu-extruded neu-extruded-hover">
+            <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#6B7280]">Total Volume</div>
+            <div className="text-2xl font-display font-extrabold text-[#3D4852] mt-1">{metrics.totalRequests}</div>
+            <div className="text-[10px] text-[#6C63FF] font-mono font-bold mt-1">+10.5% active</div>
           </div>
 
-          <div className="btc-card p-4 rounded-2xl border-[#F7931A]/30">
-            <div className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#F7931A]">Active Open</div>
-            <div className="text-2xl font-mono font-extrabold text-[#F7931A] mt-1">{metrics.openRequests}</div>
-            <div className="text-[10px] text-[#FFD600] font-mono mt-1">In pipeline</div>
+          <div className="p-5 rounded-3xl neu-extruded neu-extruded-hover">
+            <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#6B7280]">Active Open</div>
+            <div className="text-2xl font-display font-extrabold text-[#6C63FF] mt-1">{metrics.openRequests}</div>
+            <div className="text-[10px] text-[#6B7280] font-mono mt-1">In pipeline</div>
           </div>
 
-          <div className="btc-card p-4 rounded-2xl border-[#FFD600]/30">
-            <div className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#FFD600]">Pending Review</div>
-            <div className="text-2xl font-mono font-extrabold text-[#FFD600] mt-1">{metrics.pendingApprovals}</div>
-            <div className="text-[10px] text-amber-300 font-mono mt-1">Awaiting action</div>
+          <div className="p-5 rounded-3xl neu-extruded neu-extruded-hover">
+            <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#6B7280]">Pending Review</div>
+            <div className="text-2xl font-display font-extrabold text-[#DD6B20] mt-1">{metrics.pendingApprovals}</div>
+            <div className="text-[10px] text-[#DD6B20] font-mono mt-1">Action needed</div>
           </div>
 
-          <div className="btc-card p-4 rounded-2xl">
-            <div className="text-[10px] font-mono font-bold uppercase tracking-widest text-slate-400">Processing</div>
-            <div className="text-2xl font-mono font-extrabold text-cyan-400 mt-1">{metrics.inProgressRequests}</div>
-            <div className="text-[10px] text-cyan-300 font-mono mt-1">Fulfillment</div>
+          <div className="p-5 rounded-3xl neu-extruded neu-extruded-hover">
+            <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#6B7280]">Processing</div>
+            <div className="text-2xl font-display font-extrabold text-[#38B2AC] mt-1">{metrics.inProgressRequests}</div>
+            <div className="text-[10px] text-[#38B2AC] font-mono mt-1">Fulfillment</div>
           </div>
 
-          <div className="btc-card p-4 rounded-2xl">
-            <div className="text-[10px] font-mono font-bold uppercase tracking-widest text-slate-400">Completed</div>
-            <div className="text-2xl font-mono font-extrabold text-emerald-400 mt-1">{metrics.completedRequests}</div>
-            <div className="text-[10px] text-emerald-400 font-mono mt-1 font-bold">100% verified</div>
+          <div className="p-5 rounded-3xl neu-extruded neu-extruded-hover">
+            <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#6B7280]">Completed</div>
+            <div className="text-2xl font-display font-extrabold text-[#38B2AC] mt-1">{metrics.completedRequests}</div>
+            <div className="text-[10px] text-[#38B2AC] font-mono font-bold mt-1">Target met</div>
           </div>
 
-          <div className="btc-card p-4 rounded-2xl bg-gradient-to-br from-[#EA580C]/20 to-[#0F1115] border-[#F7931A]/40">
-            <div className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#FFD600]">SLA Target</div>
-            <div className="text-2xl font-mono font-extrabold text-[#FFD600] mt-1">{metrics.slaPerformancePercent}%</div>
-            <div className="text-[10px] text-[#F7931A] font-mono mt-1 flex items-center gap-1 font-bold">
-              <Award className="w-3 h-3" />
-              <span>Adherence</span>
-            </div>
+          <div className="p-5 rounded-3xl neu-inset">
+            <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#6C63FF]">SLA Adherence</div>
+            <div className="text-2xl font-display font-extrabold text-[#6C63FF] mt-1">{metrics.slaPerformancePercent}%</div>
+            <div className="text-[10px] text-[#38B2AC] font-mono font-bold mt-1">Compliant</div>
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="btc-card p-4 rounded-2xl">
-            <div className="text-[10px] font-mono font-bold uppercase tracking-widest text-slate-400">Active Requests</div>
-            <div className="text-2xl font-mono font-extrabold text-white mt-1">{metrics.activeCount || metrics.teamTotalCount || metrics.queueCount}</div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="p-5 rounded-3xl neu-extruded">
+            <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#6B7280]">Active Requests</div>
+            <div className="text-2xl font-display font-extrabold text-[#3D4852] mt-1">{metrics.activeCount || metrics.teamTotalCount || metrics.queueCount}</div>
           </div>
-          <div className="btc-card p-4 rounded-2xl">
-            <div className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#FFD600]">Action Required</div>
-            <div className="text-2xl font-mono font-extrabold text-[#FFD600] mt-1">{metrics.actionRequiredCount || metrics.pendingApprovalsCount || metrics.inProgressCount}</div>
+          <div className="p-5 rounded-3xl neu-extruded">
+            <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#6B7280]">Action Required</div>
+            <div className="text-2xl font-display font-extrabold text-[#DD6B20] mt-1">{metrics.actionRequiredCount || metrics.pendingApprovalsCount || metrics.inProgressCount}</div>
           </div>
-          <div className="btc-card p-4 rounded-2xl">
-            <div className="text-[10px] font-mono font-bold uppercase tracking-widest text-slate-400">Completed</div>
-            <div className="text-2xl font-mono font-extrabold text-emerald-400 mt-1">{metrics.completedCount || 0}</div>
+          <div className="p-5 rounded-3xl neu-extruded">
+            <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#6B7280]">Completed</div>
+            <div className="text-2xl font-display font-extrabold text-[#38B2AC] mt-1">{metrics.completedCount || 0}</div>
           </div>
-          <div className="btc-card p-4 rounded-2xl">
-            <div className="text-[10px] font-mono font-bold uppercase tracking-widest text-slate-400">Overdue SLA</div>
-            <div className="text-2xl font-mono font-extrabold text-rose-400 mt-1">{metrics.overdueCount || 0}</div>
+          <div className="p-5 rounded-3xl neu-extruded">
+            <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#6B7280]">Overdue SLA</div>
+            <div className="text-2xl font-display font-extrabold text-[#E53E3E] mt-1">{metrics.overdueCount || 0}</div>
           </div>
         </div>
       )}
 
-      {/* 4. Asymmetric Grid Layout (70% Left: Queue & Recharts Bar / 30% Right: Recharts Donut) */}
+      {/* 4. Asymmetric Grid Layout (70% Left: Queue & Bar Chart / 30% Right: Donut Chart) */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Left Column (70% Focus): Priority Work Queue & Bar Chart */}
         <div className="lg:col-span-2 space-y-6">
           
           {/* Priority Queue Table */}
-          <div className="btc-card rounded-2xl overflow-hidden">
-            <div className="px-5 py-3.5 bg-[#030304]/90 border-b border-white/10 flex items-center justify-between">
+          <div className="p-6 rounded-[32px] neu-extruded space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#6B7280]/20">
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#F7931A] shadow-[0_0_10px_#F7931A]"></span>
-                <h2 className="text-xs font-mono font-bold uppercase tracking-widest text-white">PRIORITY_WORK_QUEUE</h2>
+                <span className="w-2.5 h-2.5 rounded-full bg-[#6C63FF] shrink-0"></span>
+                <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-[#3D4852]">PRIORITY_WORK_QUEUE</h2>
               </div>
-              <Link to="/requests" className="text-[10px] font-mono text-[#F7931A] hover:text-[#FFD600] transition">VIEW_ALL_QUEUE →</Link>
+              <Link to="/requests" className="text-[10px] font-mono text-[#6C63FF] font-bold hover:underline">VIEW_ALL →</Link>
             </div>
 
             {metrics.pendingApprovals?.length > 0 ? (
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="bg-[#08080d] border-b border-white/10 text-slate-400 font-mono text-[9px] font-bold uppercase tracking-widest">
-                    <th className="py-3 px-4">REQ_ID</th>
-                    <th className="py-3 px-4">TITLE / WORKFLOW</th>
-                    <th className="py-3 px-4">REQUESTER</th>
-                    <th className="py-3 px-4">STATUS</th>
-                    <th className="py-3 px-4">SLA</th>
-                    <th className="py-3 px-4 text-right">ACTION</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/5 font-body">
-                  {metrics.pendingApprovals.map(r => (
-                    <tr key={r.id} className="hover:bg-[#F7931A]/10 transition">
-                      <td className="py-3 px-4 font-mono font-bold text-[#F7931A]">{r.request_number}</td>
-                      <td className="py-3 px-4">
-                        <div className="font-heading font-bold text-white truncate max-w-[200px]">{r.title}</div>
-                        <div className="text-[10px] text-slate-400 font-mono">{r.request_type_name}</div>
-                      </td>
-                      <td className="py-3 px-4 text-xs text-slate-300 font-medium">{r.requester_name}</td>
-                      <td className="py-3 px-4"><StatusBadge status={r.status} /></td>
-                      <td className="py-3 px-4"><SlaBadge sla={r.sla} /></td>
-                      <td className="py-3 px-4 text-right">
-                        <Link
-                          to={`/requests/${r.id}`}
-                          className="px-3 py-1 bg-gradient-to-r from-[#EA580C] to-[#F7931A] text-white font-mono text-[10px] font-bold rounded-full transition inline-block shadow-[0_0_15px_rgba(247,147,26,0.4)] hover:scale-105"
-                        >
-                          EXECUTE
-                        </Link>
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="text-[#6B7280] font-mono text-[9px] font-bold uppercase tracking-wider border-b border-[#6B7280]/20">
+                      <th className="py-2.5 px-3">REQ_ID</th>
+                      <th className="py-2.5 px-3">TITLE / WORKFLOW</th>
+                      <th className="py-2.5 px-3">REQUESTER</th>
+                      <th className="py-2.5 px-3">STATUS</th>
+                      <th className="py-2.5 px-3">SLA</th>
+                      <th className="py-2.5 px-3 text-right">ACTION</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-[#6B7280]/10 font-body">
+                    {metrics.pendingApprovals.map(r => (
+                      <tr key={r.id} className="hover:bg-[#E0E5EC]/80 transition">
+                        <td className="py-3 px-3 font-mono font-bold text-[#6C63FF]">{r.request_number}</td>
+                        <td className="py-3 px-3">
+                          <div className="font-display font-bold text-[#3D4852] truncate max-w-[190px]">{r.title}</div>
+                          <div className="text-[10px] text-[#6B7280] font-mono">{r.request_type_name}</div>
+                        </td>
+                        <td className="py-3 px-3 text-xs text-[#3D4852] font-medium">{r.requester_name}</td>
+                        <td className="py-3 px-3"><StatusBadge status={r.status} /></td>
+                        <td className="py-3 px-3"><SlaBadge sla={r.sla} /></td>
+                        <td className="py-3 px-3 text-right">
+                          <Link
+                            to={`/requests/${r.id}`}
+                            className="px-3 py-1.5 neu-button-primary text-white font-mono text-[10px] font-bold rounded-xl inline-block"
+                          >
+                            EXECUTE
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             ) : (
-              <div className="p-8 text-center text-xs text-slate-500 font-mono">NO_PENDING_ACTION_ITEMS</div>
+              <div className="p-8 text-center text-xs text-[#6B7280] font-mono">NO_PENDING_ACTION_ITEMS</div>
             )}
           </div>
 
           {/* Recharts Bar Chart: Request Volume by Category */}
-          <div className="btc-card p-5 rounded-2xl">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
-              <h2 className="text-xs font-mono font-bold text-white uppercase tracking-widest flex items-center gap-2">
-                <BarChart3 className="w-4 h-4 text-[#F7931A]" />
+          <div className="p-6 rounded-[32px] neu-extruded space-y-4">
+            <div className="flex items-center justify-between border-b border-[#6B7280]/20 pb-3">
+              <h2 className="text-xs font-mono font-bold text-[#3D4852] uppercase tracking-wider flex items-center gap-2">
+                <BarChart3 className="w-4 h-4 text-[#6C63FF]" />
                 <span>REQUEST_VOLUME_BY_CATEGORY</span>
               </h2>
-              <span className="text-[10px] font-mono text-[#FFD600]">LIVE_LEDGER_DATA</span>
+              <span className="text-[10px] font-mono text-[#6C63FF]">LIVE_METRICS</span>
             </div>
             <div className="h-56 w-full">
               {categoryChartData.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={categoryChartData} layout="vertical" margin={{ top: 5, right: 20, left: 30, bottom: 5 }}>
-                    <XAxis type="number" tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-                    <YAxis type="category" dataKey="name" tick={{ fontSize: 10, fill: '#ffffff' }} width={130} axisLine={false} tickLine={false} />
-                    <Tooltip contentStyle={{ backgroundColor: '#030304', borderColor: '#F7931A', borderRadius: '12px', color: '#fff', fontSize: '11px', boxShadow: '0 0 25px rgba(247,147,26,0.4)' }} />
+                    <XAxis type="number" tick={{ fontSize: 10, fill: '#6B7280' }} axisLine={false} tickLine={false} />
+                    <YAxis type="category" dataKey="name" tick={{ fontSize: 10, fill: '#3D4852' }} width={130} axisLine={false} tickLine={false} />
+                    <Tooltip contentStyle={{ backgroundColor: '#E0E5EC', borderColor: 'transparent', borderRadius: '16px', boxShadow: '9px 9px 16px rgba(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.6)', color: '#3D4852', fontSize: '11px' }} />
                     <Bar dataKey="count" radius={[0, 6, 6, 0]} barSize={16}>
                       {categoryChartData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={CATEGORY_COLORS[index % CATEGORY_COLORS.length]} />
@@ -281,7 +266,7 @@ export default function DashboardPage() {
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="h-full flex items-center justify-center text-xs text-slate-500 font-mono">NO_DATA</div>
+                <div className="h-full flex items-center justify-center text-xs text-[#6B7280] font-mono">NO_DATA</div>
               )}
             </div>
           </div>
@@ -291,10 +276,10 @@ export default function DashboardPage() {
         {/* Right Column (30% Focus): Recharts Department Donut Chart */}
         <div className="space-y-6">
           
-          <div className="btc-card p-5 rounded-2xl">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
-              <h2 className="text-xs font-mono font-bold text-white uppercase tracking-widest flex items-center gap-2">
-                <PieIcon className="w-4 h-4 text-[#F7931A]" />
+          <div className="p-6 rounded-[32px] neu-extruded space-y-4">
+            <div className="flex items-center justify-between border-b border-[#6B7280]/20 pb-3">
+              <h2 className="text-xs font-mono font-bold text-[#3D4852] uppercase tracking-wider flex items-center gap-2">
+                <PieIcon className="w-4 h-4 text-[#6C63FF]" />
                 <span>DEPARTMENT_ALLOCATION</span>
               </h2>
             </div>
@@ -307,26 +292,26 @@ export default function DashboardPage() {
                         <Cell key={`dept-cell-${index}`} fill={DEPT_COLORS[index % DEPT_COLORS.length]} />
                       ))}
                     </Pie>
-                    <Tooltip contentStyle={{ backgroundColor: '#030304', borderColor: '#F7931A', borderRadius: '12px', color: '#fff', fontSize: '11px', boxShadow: '0 0 25px rgba(247,147,26,0.4)' }} />
-                    <Legend verticalAlign="bottom" height={36} iconType="circle" formatter={(val) => <span className="text-[10px] font-mono text-slate-300">{val}</span>} />
+                    <Tooltip contentStyle={{ backgroundColor: '#E0E5EC', borderColor: 'transparent', borderRadius: '16px', boxShadow: '9px 9px 16px rgba(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.6)', color: '#3D4852', fontSize: '11px' }} />
+                    <Legend verticalAlign="bottom" height={36} iconType="circle" formatter={(val) => <span className="text-[10px] font-mono text-[#3D4852]">{val}</span>} />
                   </PieChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="h-full flex items-center justify-center text-xs text-slate-500 font-mono">NO_DATA</div>
+                <div className="h-full flex items-center justify-center text-xs text-[#6B7280] font-mono">NO_DATA</div>
               )}
             </div>
           </div>
 
-          {/* Department Breakdown */}
-          <div className="btc-card p-4 rounded-2xl space-y-2">
-            <div className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#F7931A] border-b border-white/10 pb-2">
+          {/* Department Load Summary */}
+          <div className="p-5 rounded-3xl neu-inset space-y-2">
+            <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#6C63FF] border-b border-[#6B7280]/20 pb-2">
               DEPT_LOAD_SUMMARY
             </div>
             <div className="space-y-1.5 font-body">
               {deptChartData.map(d => (
-                <div key={d.name} className="flex items-center justify-between text-xs py-1.5 border-b border-white/5 last:border-0">
-                  <span className="font-semibold text-slate-200">{d.name}</span>
-                  <span className="font-mono text-[11px] font-bold text-[#FFD600] bg-[#F7931A]/10 px-2.5 py-0.5 rounded-full border border-[#F7931A]/30">
+                <div key={d.name} className="flex items-center justify-between text-xs py-1.5 border-b border-[#6B7280]/10 last:border-0">
+                  <span className="font-semibold text-[#3D4852]">{d.name}</span>
+                  <span className="font-mono text-[11px] font-bold text-[#6C63FF] neu-inset-sm px-2.5 py-0.5 rounded-full">
                     {d.count} req
                   </span>
                 </div>

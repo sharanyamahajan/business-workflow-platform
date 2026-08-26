@@ -11,10 +11,7 @@ import {
   Upload, 
   Clock, 
   CheckCircle2, 
-  AlertCircle,
-  FileText,
-  ShieldAlert,
-  Zap
+  AlertCircle
 } from 'lucide-react';
 
 const WORKFLOW_ICONS = {
@@ -133,15 +130,15 @@ export default function CreateRequestPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 pb-8 font-body text-slate-100 bg-grid-pattern">
+    <div className="max-w-4xl mx-auto space-y-6 pb-8 font-body text-[#3D4852]">
       
-      <div className="pb-4 border-b border-white/10">
-        <h1 className="text-2xl font-heading font-extrabold text-white tracking-tight">Create Request Contract</h1>
-        <p className="text-xs text-slate-400 mt-1">Select a cryptographic workflow type to initiate department review</p>
+      <div className="p-6 rounded-[32px] neu-extruded">
+        <h1 className="text-2xl font-display font-extrabold text-[#3D4852] tracking-tight">Create Request</h1>
+        <p className="text-xs text-[#6B7280] mt-1">Select a business workflow type to initiate department review</p>
       </div>
 
-      {/* Workflow Category Cards with Corner Accents */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      {/* Workflow Category Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {requestTypes.map(t => {
           const Icon = WORKFLOW_ICONS[t.code] || Key;
           const isSelected = selectedTypeId === t.id;
@@ -150,35 +147,27 @@ export default function CreateRequestPage() {
             <div
               key={t.id}
               onClick={() => selectType(t)}
-              className={`p-4 rounded-2xl border cursor-pointer transition-all duration-300 relative overflow-hidden flex flex-col justify-between ${
+              className={`p-5 rounded-[32px] cursor-pointer transition-all duration-300 flex flex-col justify-between ${
                 isSelected
-                  ? 'bg-gradient-to-br from-[#EA580C]/20 via-[#0F1115] to-[#0F1115] border-[#F7931A] shadow-[0_0_30px_-5px_rgba(247,147,26,0.4)] scale-105'
-                  : 'btc-card border-white/10 hover:border-[#F7931A]/50'
+                  ? 'neu-inset text-[#6C63FF]'
+                  : 'neu-extruded neu-extruded-hover text-[#3D4852]'
               }`}
             >
-              {/* Corner Border Accents */}
-              {isSelected && (
-                <>
-                  <span className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#FFD600]"></span>
-                  <span className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#FFD600]"></span>
-                </>
-              )}
-
               <div>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-3 ${
-                  isSelected ? 'bg-[#F7931A] text-white shadow-[0_0_15px_#F7931A]' : 'bg-white/10 text-slate-300'
+                <div className={`w-10 h-10 rounded-2xl flex items-center justify-center mb-3 ${
+                  isSelected ? 'neu-inset-deep text-[#6C63FF]' : 'neu-inset text-[#6C63FF]'
                 }`}>
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-5 h-5" />
                 </div>
-                <h2 className={`text-xs font-heading font-bold ${isSelected ? 'text-[#FFD600]' : 'text-white'}`}>{t.name}</h2>
-                <p className="text-[10px] mt-1 text-slate-400 line-clamp-2">{t.description}</p>
+                <h2 className={`text-xs font-display font-bold ${isSelected ? 'text-[#6C63FF]' : 'text-[#3D4852]'}`}>{t.name}</h2>
+                <p className="text-[10px] mt-1 text-[#6B7280] line-clamp-2">{t.description}</p>
               </div>
 
-              <div className={`mt-3 pt-2 border-t flex items-center justify-between text-[10px] font-mono ${
-                isSelected ? 'border-[#F7931A]/30 text-[#FFD600]' : 'border-white/5 text-slate-500'
+              <div className={`mt-4 pt-2 border-t flex items-center justify-between text-[10px] font-mono ${
+                isSelected ? 'border-[#6C63FF]/30 text-[#6C63FF]' : 'border-[#6B7280]/20 text-[#6B7280]'
               }`}>
                 <span>SLA: {t.target_sla_hours}h</span>
-                {isSelected && <CheckCircle2 className="w-4 h-4 text-[#F7931A]" />}
+                {isSelected && <CheckCircle2 className="w-4 h-4 text-[#6C63FF]" />}
               </div>
             </div>
           );
@@ -187,63 +176,63 @@ export default function CreateRequestPage() {
 
       {/* Dynamic Workflow Form */}
       {selectedType && (
-        <form onSubmit={handleSubmit} className="btc-card rounded-2xl p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="p-8 rounded-[32px] neu-extruded space-y-6">
           
-          <div className="border-b border-white/10 pb-3 flex items-center justify-between">
+          <div className="border-b border-[#6B7280]/20 pb-4 flex items-center justify-between">
             <div>
-              <h2 className="text-base font-heading font-extrabold text-white">{selectedType.name}</h2>
-              <p className="text-[11px] text-slate-400">Requester: {user.full_name} ({user.dept_name})</p>
+              <h2 className="text-base font-display font-extrabold text-[#3D4852]">{selectedType.name}</h2>
+              <p className="text-[11px] text-[#6B7280]">Requester: {user.full_name} ({user.dept_name})</p>
             </div>
             <div>
-              <span className="text-[10px] font-mono font-bold text-[#FFD600] bg-[#F7931A]/10 border border-[#F7931A]/30 px-3 py-1 rounded-full">
+              <span className="text-[10px] font-mono font-bold text-[#6C63FF] neu-inset-sm px-3 py-1 rounded-full">
                 SLA Target: {selectedType.target_sla_hours} Hours
               </span>
             </div>
           </div>
 
           {error && (
-            <div className="p-3 rounded-xl bg-rose-950/60 border border-rose-500/50 text-rose-200 text-xs font-mono flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+            <div className="p-3.5 rounded-2xl neu-inset text-[#E53E3E] text-xs font-medium flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 text-[#E53E3E] shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-heading font-bold text-white mb-1.5">Request Title *</label>
+              <label className="block text-xs font-display font-bold text-[#3D4852] mb-1.5">Request Title *</label>
               <input
                 type="text"
                 required
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-4 py-2.5 bg-black/60 border-b-2 border-white/20 rounded-lg text-xs text-white placeholder:text-slate-500 focus-visible:border-[#F7931A] focus-visible:outline-none"
+                className="w-full px-4 py-2.5 bg-[#E0E5EC] neu-inset-deep rounded-2xl text-xs text-[#3D4852] placeholder-[#6B7280] neu-focus-ring"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-heading font-bold text-white mb-1.5">Priority Level *</label>
+              <label className="block text-xs font-display font-bold text-[#3D4852] mb-1.5">Priority Level *</label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value)}
-                className="w-full px-4 py-2.5 bg-black/60 border-b-2 border-white/20 rounded-lg text-xs text-white focus-visible:border-[#F7931A] focus-visible:outline-none font-bold"
+                className="w-full px-4 py-2.5 bg-[#E0E5EC] neu-inset-deep rounded-2xl text-xs text-[#3D4852] font-bold neu-focus-ring"
               >
-                <option value="LOW" className="bg-[#0F1115]">Low Priority</option>
-                <option value="MEDIUM" className="bg-[#0F1115]">Medium Priority</option>
-                <option value="HIGH" className="bg-[#0F1115]">High Priority</option>
-                <option value="URGENT" className="bg-[#0F1115]">Urgent Priority</option>
+                <option value="LOW">Low Priority</option>
+                <option value="MEDIUM">Medium Priority</option>
+                <option value="HIGH">High Priority</option>
+                <option value="URGENT">Urgent Priority</option>
               </select>
             </div>
           </div>
 
-          <div className="space-y-4 pt-3 border-t border-white/10">
-            <div className="text-[10px] font-mono font-bold text-[#F7931A] uppercase tracking-widest">
+          <div className="space-y-4 pt-3 border-t border-[#6B7280]/20">
+            <div className="text-[10px] font-mono font-bold text-[#6C63FF] uppercase tracking-wider">
               DYNAMIC_FORM_INPUTS ({selectedType.code})
             </div>
 
             {selectedType.form_schema?.fields?.map(field => (
               <div key={field.name}>
-                <label className="block text-xs font-heading font-bold text-white mb-1.5">
-                  {field.label} {field.required && <span className="text-rose-400">*</span>}
+                <label className="block text-xs font-display font-bold text-[#3D4852] mb-1.5">
+                  {field.label} {field.required && <span className="text-[#E53E3E]">*</span>}
                 </label>
 
                 {field.type === 'textarea' ? (
@@ -253,18 +242,18 @@ export default function CreateRequestPage() {
                     onChange={(e) => handleFieldChange(field.name, e.target.value)}
                     rows={3}
                     placeholder={`Enter ${field.label.toLowerCase()}...`}
-                    className="w-full px-4 py-2.5 bg-black/60 border-b-2 border-white/20 rounded-lg text-xs text-white placeholder:text-slate-500 focus-visible:border-[#F7931A] focus-visible:outline-none"
+                    className="w-full px-4 py-2.5 bg-[#E0E5EC] neu-inset-deep rounded-2xl text-xs text-[#3D4852] placeholder-[#6B7280] neu-focus-ring"
                   />
                 ) : field.type === 'select' ? (
                   <select
                     required={field.required}
                     value={formData[field.name] || ''}
                     onChange={(e) => handleFieldChange(field.name, e.target.value)}
-                    className="w-full px-4 py-2.5 bg-black/60 border-b-2 border-white/20 rounded-lg text-xs text-white focus-visible:border-[#F7931A] focus-visible:outline-none"
+                    className="w-full px-4 py-2.5 bg-[#E0E5EC] neu-inset-deep rounded-2xl text-xs text-[#3D4852] neu-focus-ring"
                   >
-                    <option value="" className="bg-[#0F1115]">Select option...</option>
+                    <option value="">Select option...</option>
                     {field.options?.map(opt => (
-                      <option key={opt} value={opt} className="bg-[#0F1115]">{opt}</option>
+                      <option key={opt} value={opt}>{opt}</option>
                     ))}
                   </select>
                 ) : (
@@ -274,18 +263,18 @@ export default function CreateRequestPage() {
                     value={formData[field.name] || ''}
                     onChange={(e) => handleFieldChange(field.name, e.target.value)}
                     placeholder={`Enter ${field.label.toLowerCase()}...`}
-                    className="w-full px-4 py-2.5 bg-black/60 border-b-2 border-white/20 rounded-lg text-xs text-white placeholder:text-slate-500 focus-visible:border-[#F7931A] focus-visible:outline-none"
+                    className="w-full px-4 py-2.5 bg-[#E0E5EC] neu-inset-deep rounded-2xl text-xs text-[#3D4852] placeholder-[#6B7280] neu-focus-ring"
                   />
                 )}
               </div>
             ))}
           </div>
 
-          <div className="pt-3 border-t border-white/10">
-            <label className="block text-xs font-heading font-bold text-white mb-1.5">
+          <div className="pt-3 border-t border-[#6B7280]/20">
+            <label className="block text-xs font-display font-bold text-[#3D4852] mb-1.5">
               Supporting Attachment (Optional)
             </label>
-            <div className="border-2 border-dashed border-white/20 rounded-xl p-6 text-center hover:bg-white/5 transition cursor-pointer">
+            <div className="p-6 rounded-3xl neu-inset-deep text-center cursor-pointer">
               <input
                 type="file"
                 id="file-upload"
@@ -293,34 +282,34 @@ export default function CreateRequestPage() {
                 className="hidden"
               />
               <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center">
-                <Upload className="w-5 h-5 text-[#F7931A] mb-1.5" />
-                <span className="text-xs font-bold text-white">
+                <Upload className="w-5 h-5 text-[#6C63FF] mb-2" />
+                <span className="text-xs font-bold text-[#3D4852]">
                   {file ? file.name : 'Select receipt or quotation file (PDF, PNG, JPG, DOCX)'}
                 </span>
-                <span className="text-[10px] text-slate-500 font-mono mt-0.5">MAX_SIZE: 10MB</span>
+                <span className="text-[10px] text-[#6B7280] font-mono mt-0.5">MAX_SIZE: 10MB</span>
               </label>
             </div>
           </div>
 
-          <div className="pt-4 border-t border-white/10 flex items-center justify-between">
-            <div className="text-[10px] text-slate-400 font-mono">
-              Will route to Reporting Manager for initial stage validation.
+          <div className="pt-4 border-t border-[#6B7280]/20 flex items-center justify-between">
+            <div className="text-[10px] text-[#6B7280] font-mono">
+              Will route to Reporting Manager for initial approval.
             </div>
             <div className="flex items-center gap-3">
               <button
                 type="button"
                 onClick={() => navigate('/requests')}
-                className="px-4 py-2 bg-white/10 hover:bg-white/20 text-slate-300 font-bold text-xs rounded-full transition"
+                className="px-4 py-2.5 neu-button-secondary text-[#6B7280] font-bold text-xs rounded-2xl"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={submitting}
-                className="px-6 py-2.5 bg-gradient-to-r from-[#EA580C] via-[#F7931A] to-[#FFD600] text-white font-heading font-bold text-xs rounded-full shadow-[0_0_25px_-5px_rgba(234,88,12,0.6)] hover:scale-105 transition flex items-center gap-2 disabled:opacity-50 border border-white/20"
+                className="px-6 py-2.5 neu-button-primary text-white font-display font-bold text-xs rounded-2xl flex items-center gap-2 disabled:opacity-50"
               >
                 <span>{submitting ? 'Submitting...' : 'Submit Request'}</span>
-                <ArrowRight className="w-4 h-4 text-white" />
+                <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
