@@ -8,22 +8,38 @@ import { Search, Plus, ChevronRight, FileText, Inbox, Layers } from 'lucide-reac
 
 export default function RequestListPage() {
   const { user } = useAuth();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [requests, setRequests] = useState([]);
   const [requestTypes, setRequestTypes] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [search, setSearch] = useState(searchParams.get('search') || '');
-  const [selectedType, setSelectedType] = useState(searchParams.get('request_type_id') || '');
-  const [selectedStatus, setSelectedStatus] = useState(searchParams.get('status') || '');
-  const [selectedPriority, setSelectedPriority] = useState(searchParams.get('priority') || '');
-  const [selectedSla, setSelectedSla] = useState(searchParams.get('sla_status') || '');
-  const [scope, setScope] = useState(searchParams.get('scope') || 'all');
+  const urlScope = searchParams.get('scope') || 'all';
+  const urlSearch = searchParams.get('search') || '';
+  const urlType = searchParams.get('request_type_id') || '';
+  const urlStatus = searchParams.get('status') || '';
+  const urlPriority = searchParams.get('priority') || '';
+  const urlSla = searchParams.get('sla_status') || '';
+
+  const [search, setSearch] = useState(urlSearch);
+  const [selectedType, setSelectedType] = useState(urlType);
+  const [selectedStatus, setSelectedStatus] = useState(urlStatus);
+  const [selectedPriority, setSelectedPriority] = useState(urlPriority);
+  const [selectedSla, setSelectedSla] = useState(urlSla);
+  const [scope, setScope] = useState(urlScope);
 
   useEffect(() => {
     fetchTypes();
   }, []);
+
+  useEffect(() => {
+    setScope(urlScope);
+    setSearch(urlSearch);
+    setSelectedType(urlType);
+    setSelectedStatus(urlStatus);
+    setSelectedPriority(urlPriority);
+    setSelectedSla(urlSla);
+  }, [searchParams]);
 
   useEffect(() => {
     fetchRequests();
@@ -46,13 +62,14 @@ export default function RequestListPage() {
   const fetchRequests = async () => {
     setLoading(true);
     try {
+      const currentScope = searchParams.get('scope') || scope || 'all';
       const params = new URLSearchParams();
       if (search) params.set('search', search);
       if (selectedType) params.set('request_type_id', selectedType);
       if (selectedStatus) params.set('status', selectedStatus);
       if (selectedPriority) params.set('priority', selectedPriority);
       if (selectedSla) params.set('sla_status', selectedSla);
-      if (scope) params.set('scope', scope);
+      if (currentScope) params.set('scope', currentScope);
 
       const res = await fetch(`${API_BASE_URL}/api/requests?${params.toString()}`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
@@ -69,9 +86,22 @@ export default function RequestListPage() {
     }
   };
 
+  const handleScopeChange = (newScope) => {
+    setScope(newScope);
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set('scope', newScope);
+    setSearchParams(newParams);
+  };
+
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    fetchRequests();
+    const newParams = new URLSearchParams(searchParams);
+    if (search) newParams.set('search', search); else newParams.delete('search');
+    if (selectedType) newParams.set('request_type_id', selectedType); else newParams.delete('request_type_id');
+    if (selectedStatus) newParams.set('status', selectedStatus); else newParams.delete('status');
+    if (selectedPriority) newParams.set('priority', selectedPriority); else newParams.delete('priority');
+    if (selectedSla) newParams.set('sla_status', selectedSla); else newParams.delete('sla_status');
+    setSearchParams(newParams);
   };
 
   return (
@@ -109,7 +139,7 @@ export default function RequestListPage() {
           ].map(tab => (
             <button
               key={tab.id}
-              onClick={() => setScope(tab.id)}
+              onClick={() => handleScopeChange(tab.id)}
               className={`px-4 py-2 rounded-2xl text-xs font-body transition ${
                 scope === tab.id
                   ? 'neu-inset text-[#6C63FF] font-bold'
@@ -137,7 +167,12 @@ export default function RequestListPage() {
 
           <select
             value={selectedType}
-            onChange={(e) => setSelectedType(e.target.value)}
+            onChange={(e) => {
+              setSelectedType(e.target.value);
+              const newParams = new URLSearchParams(searchParams);
+              if (e.target.value) newParams.set('request_type_id', e.target.value); else newParams.delete('request_type_id');
+              setSearchParams(newParams);
+            }}
             className="w-full px-3 py-2 bg-[#E0E5EC] neu-inset-deep rounded-2xl text-xs text-[#3D4852] font-medium neu-focus-ring"
           >
             <option value="">All Workflow Types</option>
@@ -148,7 +183,12 @@ export default function RequestListPage() {
 
           <select
             value={selectedStatus}
-            onChange={(e) => setSelectedStatus(e.target.value)}
+            onChange={(e) => {
+              setSelectedStatus(e.target.value);
+              const newParams = new URLSearchParams(searchParams);
+              if (e.target.value) newParams.set('status', e.target.value); else newParams.delete('status');
+              setSearchParams(newParams);
+            }}
             className="w-full px-3 py-2 bg-[#E0E5EC] neu-inset-deep rounded-2xl text-xs text-[#3D4852] font-medium neu-focus-ring"
           >
             <option value="">All Statuses</option>
@@ -162,7 +202,12 @@ export default function RequestListPage() {
 
           <select
             value={selectedPriority}
-            onChange={(e) => setSelectedPriority(e.target.value)}
+            onChange={(e) => {
+              setSelectedPriority(e.target.value);
+              const newParams = new URLSearchParams(searchParams);
+              if (e.target.value) newParams.set('priority', e.target.value); else newParams.delete('priority');
+              setSearchParams(newParams);
+            }}
             className="w-full px-3 py-2 bg-[#E0E5EC] neu-inset-deep rounded-2xl text-xs text-[#3D4852] font-medium neu-focus-ring"
           >
             <option value="">All Priorities</option>
@@ -174,7 +219,12 @@ export default function RequestListPage() {
 
           <select
             value={selectedSla}
-            onChange={(e) => setSelectedSla(e.target.value)}
+            onChange={(e) => {
+              setSelectedSla(e.target.value);
+              const newParams = new URLSearchParams(searchParams);
+              if (e.target.value) newParams.set('sla_status', e.target.value); else newParams.delete('sla_status');
+              setSearchParams(newParams);
+            }}
             className="w-full px-3 py-2 bg-[#E0E5EC] neu-inset-deep rounded-2xl text-xs text-[#3D4852] font-medium neu-focus-ring"
           >
             <option value="">All SLA States</option>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { 
   LayoutDashboard, 
@@ -15,10 +15,28 @@ import {
 
 export default function Sidebar() {
   const { user } = useAuth();
+  const location = useLocation();
 
   if (!user) return null;
 
   const roleCode = user.role_code;
+
+  const isScopeActive = (targetScope) => {
+    if (location.pathname !== '/requests') return false;
+    const params = new URLSearchParams(location.search);
+    const currentScope = params.get('scope') || 'all';
+    return currentScope === targetScope;
+  };
+
+  const isRouteActive = (targetPath) => {
+    if (targetPath === '/requests') {
+      if (location.pathname !== '/requests') return false;
+      const params = new URLSearchParams(location.search);
+      const currentScope = params.get('scope') || 'all';
+      return currentScope === 'all';
+    }
+    return location.pathname === targetPath;
+  };
 
   return (
     <aside className="w-60 bg-[#E0E5EC] p-4 flex flex-col justify-between shrink-0 font-body text-[#3D4852]">
@@ -33,28 +51,23 @@ export default function Sidebar() {
 
           <NavLink
             to="/dashboard"
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-2xl text-xs transition ${
-                isActive
-                  ? 'neu-inset text-[#6C63FF] font-display font-bold'
-                  : 'neu-button-secondary text-[#3D4852]'
-              }`
-            }
+            className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-xs transition ${
+              isRouteActive('/dashboard')
+                ? 'neu-inset text-[#6C63FF] font-display font-bold'
+                : 'neu-button-secondary text-[#3D4852]'
+            }`}
           >
             <LayoutDashboard className="w-4 h-4 text-[#6C63FF]" />
             <span>Dashboard</span>
           </NavLink>
 
           <NavLink
-            to="/requests"
-            end
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-2xl text-xs transition ${
-                isActive
-                  ? 'neu-inset text-[#6C63FF] font-display font-bold'
-                  : 'neu-button-secondary text-[#3D4852]'
-              }`
-            }
+            to="/requests?scope=all"
+            className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-xs transition ${
+              isRouteActive('/requests')
+                ? 'neu-inset text-[#6C63FF] font-display font-bold'
+                : 'neu-button-secondary text-[#3D4852]'
+            }`}
           >
             <Inbox className="w-4 h-4 text-[#38B2AC]" />
             <span>Requests Queue</span>
@@ -62,13 +75,11 @@ export default function Sidebar() {
 
           <NavLink
             to="/requests/create"
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-display font-bold transition ${
-                isActive
-                  ? 'neu-inset text-[#6C63FF]'
-                  : 'neu-button-primary text-white'
-              }`
-            }
+            className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-display font-bold transition ${
+              isRouteActive('/requests/create')
+                ? 'neu-inset text-[#6C63FF]'
+                : 'neu-button-primary text-white'
+            }`}
           >
             <PlusCircle className="w-4 h-4" />
             <span>New Request</span>
@@ -83,11 +94,9 @@ export default function Sidebar() {
 
           <NavLink
             to="/requests?scope=my_requests"
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-2.5 rounded-2xl text-xs transition ${
-                isActive ? 'neu-inset text-[#6C63FF] font-bold' : 'neu-button-secondary text-[#6B7280]'
-              }`
-            }
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-2xl text-xs transition ${
+              isScopeActive('my_requests') ? 'neu-inset text-[#6C63FF] font-bold' : 'neu-button-secondary text-[#6B7280]'
+            }`}
           >
             <FileText className="w-4 h-4" />
             <span>My Submissions</span>
@@ -96,11 +105,9 @@ export default function Sidebar() {
           {(roleCode === 'REPORTING_MANAGER' || roleCode === 'DEPARTMENT_HEAD' || roleCode === 'SYSTEM_ADMIN') && (
             <NavLink
               to="/requests?scope=pending_approval"
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-2.5 rounded-2xl text-xs transition ${
-                  isActive ? 'neu-inset text-[#DD6B20] font-bold' : 'neu-button-secondary text-[#6B7280]'
-                }`
-              }
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-2xl text-xs transition ${
+                isScopeActive('pending_approval') ? 'neu-inset text-[#DD6B20] font-bold' : 'neu-button-secondary text-[#6B7280]'
+              }`}
             >
               <UserCheck className="w-4 h-4 text-[#DD6B20]" />
               <span>Pending Approvals</span>
@@ -110,11 +117,9 @@ export default function Sidebar() {
           {(roleCode === 'DEPARTMENT_STAFF' || roleCode === 'SYSTEM_ADMIN') && (
             <NavLink
               to="/requests?scope=dept_queue"
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-2.5 rounded-2xl text-xs transition ${
-                  isActive ? 'neu-inset text-[#6C63FF] font-bold' : 'neu-button-secondary text-[#6B7280]'
-                }`
-              }
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-2xl text-xs transition ${
+                isScopeActive('dept_queue') ? 'neu-inset text-[#6C63FF] font-bold' : 'neu-button-secondary text-[#6B7280]'
+              }`}
             >
               <CheckSquare className="w-4 h-4" />
               <span>Department Queue</span>
@@ -124,11 +129,9 @@ export default function Sidebar() {
           {(roleCode === 'SYSTEM_ADMIN' || roleCode === 'OPERATIONS_MANAGER') && (
             <NavLink
               to="/admin"
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-2.5 rounded-2xl text-xs transition ${
-                  isActive ? 'neu-inset text-[#6C63FF] font-bold' : 'neu-button-secondary text-[#6B7280]'
-                }`
-              }
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-2xl text-xs transition ${
+                isRouteActive('/admin') ? 'neu-inset text-[#6C63FF] font-bold' : 'neu-button-secondary text-[#6B7280]'
+              }`}
             >
               <Settings className="w-4 h-4" />
               <span>Administration</span>
