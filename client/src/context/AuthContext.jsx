@@ -23,9 +23,9 @@ export const AuthProvider = ({ children }) => {
     if (token) {
       fetchCurrentUser(token);
     } else {
-      switchDemoUser('aarav.sharma@company.com');
+      setLoading(false);
     }
-  }, []);
+  }, [token]);
 
   const fetchCurrentUser = async (authToken) => {
     try {
@@ -40,6 +40,7 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (err) {
       console.error('Failed to fetch user:', err);
+      logout();
     } finally {
       setLoading(false);
     }
@@ -64,9 +65,11 @@ export const AuthProvider = ({ children }) => {
   const switchDemoUser = async (email) => {
     setLoading(true);
     try {
-      await login(email, 'Password123!');
+      const user = await login(email, 'Password123!');
+      return user;
     } catch (err) {
       console.error('Failed demo login:', err);
+      throw err;
     } finally {
       setLoading(false);
     }
